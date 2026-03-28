@@ -596,14 +596,119 @@ strong { font-weight: 700; color: var(--navy-dark); }
 .pc-pill { padding: 4px 12px; border-radius: 999px; font-family: 'Arial', sans-serif; font-size: 11px; font-weight: 700; }
 .pc-section-wrap { margin-bottom: 18px; }
 
-/* Responsive */
+/* ── MOBILE NAV DRAWER ── */
+.mob-nav-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.mob-nav-btn span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: white;
+  margin: 5px 0;
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+.mob-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 150;
+}
+.mob-overlay.open { display: block; }
+.mob-drawer {
+  position: fixed;
+  top: 0;
+  left: -280px;
+  width: 280px;
+  bottom: 0;
+  background: white;
+  z-index: 200;
+  overflow-y: auto;
+  transition: left 0.25s ease;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+  padding-bottom: 2rem;
+}
+.mob-drawer.open { left: 0; }
+.mob-drawer-header {
+  background: var(--navy-dark);
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 3px solid var(--accent);
+}
+.mob-drawer-title {
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+}
+.mob-drawer-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 2px 6px;
+}
+
+/* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   :root { --sidebar-w: 0px; }
   .sidebar { display: none; }
-  .card-grid, .cert-grid, .wbl-type-grid, .continuum-grid, .glossary-grid { grid-template-columns: 1fr; }
+  .mob-nav-btn { display: block; }
+  .header-badge { display: none; }
+
+  .section { padding: 1.5rem 1rem 3rem; }
+  h1.section-title { font-size: 22px; }
+  h2 { font-size: 17px; }
+
+  .card-grid,
+  .cert-grid,
+  .wbl-type-grid,
+  .continuum-grid,
+  .glossary-grid { grid-template-columns: 1fr; }
+
   .sx-grid { grid-template-columns: 1fr; }
   .cx-row { grid-template-columns: 1fr; }
   .wbl-doc-list { grid-template-columns: 1fr; }
+
+  /* Scope & sequence tabs wrap */
+  #ss-tabs { gap: 6px; }
+  #ss-tabs button { font-size: 11px; padding: 5px 10px; }
+
+  /* Tool embeds */
+  .tool-embed-header { flex-wrap: wrap; gap: 4px; }
+  .tool-embed-desc { display: none; }
+
+  /* Crosswalk steps compress */
+  .cx-steps { flex-wrap: wrap; }
+  .cx-step { flex: 1 1 40%; font-size: 11px; padding: 6px 2px; }
+
+  /* Tables scroll horizontally */
+  .deadline-table, .ss-table { font-size: 12px; }
+
+  /* Role map cards full width */
+  #role-map-container > div { margin-bottom: 10px; }
+
+  /* Contacts grid single column */
+  #contacts-grid { grid-template-columns: 1fr !important; }
+
+  /* Footer */
+  footer { flex-direction: column; gap: 6px; text-align: center; }
+
+  /* Hero card */
+  .hero-card { padding: 1.25rem; }
+  .hero-card h2 { font-size: 18px; }
 }
 </style>
 </head>
@@ -619,7 +724,20 @@ strong { font-weight: 700; color: var(--navy-dark); }
     </div>
   </div>
   <div class="header-badge">March 2026 &nbsp;·&nbsp; Authored by Larry A. Williams</div>
+  <button class="mob-nav-btn" onclick="mobOpen()" aria-label="Open navigation">
+    <span></span><span></span><span></span>
+  </button>
 </header>
+
+<!-- MOBILE OVERLAY -->
+<div class="mob-overlay" id="mob-overlay" onclick="mobClose()"></div>
+
+<!-- MOBILE DRAWER -->
+<nav class="mob-drawer" id="mob-drawer">
+  <div class="mob-drawer-header">
+    <span class="mob-drawer-title">CTE Playbook</span>
+    <button class="mob-drawer-close" onclick="mobClose()">✕</button>
+  </div>
 
 <!-- SIDEBAR NAV -->
 <nav class="sidebar">
@@ -701,6 +819,34 @@ strong { font-weight: 700; color: var(--navy-dark); }
     <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h12M4 10h12M4 14h8"/></svg>
     Glossary &amp; Resources
   </a>
+</nav>
+
+<!-- MOBILE DRAWER NAV LINKS (mirrors sidebar) -->
+  <div class="nav-section-label">Overview</div>
+  <a class="nav-link" onclick="mobShow('about')">About CTE</a>
+  <a class="nav-link" onclick="mobShow('cteteacher')">Being a CTE Teacher</a>
+  <a class="nav-link" onclick="mobShow('certification')">Teacher Certification</a>
+  <a class="nav-link" onclick="mobShow('quiz')">So You Think You Know CTE? <span class="nav-tool-badge">NEW</span></a>
+  <div class="nav-section-label">Core Requirements</div>
+  <a class="nav-link" onclick="mobShow('approval')">Program Approval</a>
+  <a class="nav-link" onclick="mobShow('assessment')">Technical Assessment</a>
+  <a class="nav-link" onclick="mobShow('wbl')">Work-Based Learning <span class="nav-tool-badge">TOOL</span></a>
+  <a class="nav-link" onclick="mobShow('curriculum')">Curriculum &amp; Instruction <span class="nav-tool-badge">TOOL</span></a>
+  <div class="nav-section-label">People &amp; Process</div>
+  <a class="nav-link" onclick="mobShow('selfstudy')">Self-Study Process</a>
+  <a class="nav-link" onclick="mobShow('external')">External Review</a>
+  <a class="nav-link" onclick="mobShow('nysed')">NYSED Application <span class="nav-tool-badge">TOOL</span></a>
+  <div class="nav-section-label">Student Support</div>
+  <a class="nav-link" onclick="mobShow('disabilities')">Students with Disabilities</a>
+  <a class="nav-link" onclick="mobShow('quality')">Quality Continuum</a>
+  <div class="nav-section-label">Reference</div>
+  <a class="nav-link" onclick="mobShow('rolemapping')">Who Does What</a>
+  <a class="nav-link" onclick="mobShow('contacts')">Contact Your CTE Team</a>
+  <a class="nav-link" onclick="mobShow('glossary')">Glossary &amp; Resources</a>
+  <div style="padding:1rem 1.25rem;border-top:1px solid var(--border-light);margin-top:0.5rem;">
+    <div style="font-family:'Arial',sans-serif;font-size:11px;color:var(--text-muted);">© 2026 Larry A. Williams</div>
+    <div style="font-family:'Arial',sans-serif;font-size:11px;color:var(--text-muted);">NYC CTE Playbook · March 2026</div>
+  </div>
 </nav>
 
 <!-- MAIN CONTENT -->
@@ -3176,6 +3322,26 @@ function buildContacts(){
       ${c.email?`<div style="font-size:13px;color:var(--accent);margin-bottom:4px;">✉ ${c.email}</div>`:''}
       ${c.phone?`<div style="font-size:13px;color:var(--text-secondary);">☎ ${c.phone}</div>`:''}
     </div>`).join('');
+}
+
+// ── MOBILE NAV ──
+function mobOpen(){
+  document.getElementById('mob-drawer').classList.add('open');
+  document.getElementById('mob-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function mobClose(){
+  document.getElementById('mob-drawer').classList.remove('open');
+  document.getElementById('mob-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+function mobShow(id){
+  show(id);
+  mobClose();
+  // Highlight active link in drawer
+  document.querySelectorAll('#mob-drawer .nav-link').forEach(l=>{
+    l.classList.toggle('active', l.getAttribute('onclick') && l.getAttribute('onclick').includes("'"+id+"'"));
+  });
 }
 
 // ── FINAL INIT (after all data and functions defined) ──
