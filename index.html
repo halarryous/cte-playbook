@@ -710,9 +710,228 @@ strong { font-weight: 700; color: var(--navy-dark); }
   .hero-card { padding: 1.25rem; }
   .hero-card h2 { font-size: 18px; }
 }
+
+/* ── ONBOARDING ── */
+#onboarding-screen {
+  position: fixed; inset: 0; background: var(--navy-dark); z-index: 500;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 2rem; overflow-y: auto;
+}
+.ob-logo { font-family:'Arial',sans-serif; font-size:13px; font-weight:700; color:rgba(255,255,255,0.5); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:0.5rem; text-align:center; }
+.ob-title { font-family:'Arial',sans-serif; font-size:28px; font-weight:700; color:white; text-align:center; margin-bottom:0.5rem; line-height:1.2; }
+.ob-sub { font-size:15px; color:rgba(255,255,255,0.6); text-align:center; margin-bottom:2rem; max-width:480px; }
+.ob-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; max-width:680px; width:100%; margin-bottom:1.5rem; }
+.ob-card { background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.12); border-radius:10px; padding:1.25rem 1rem; cursor:pointer; transition:background 0.15s, border-color 0.15s, transform 0.12s; text-align:center; }
+.ob-card:hover { background:rgba(255,255,255,0.13); border-color:var(--accent); transform:translateY(-2px); }
+.ob-card-icon { font-size:24px; margin-bottom:8px; }
+.ob-card-label { font-family:'Arial',sans-serif; font-size:13px; font-weight:700; color:white; line-height:1.3; margin-bottom:5px; }
+.ob-card-desc { font-size:11px; color:rgba(255,255,255,0.5); line-height:1.4; }
+.ob-skip { font-family:'Arial',sans-serif; font-size:12px; color:rgba(255,255,255,0.4); background:none; border:none; cursor:pointer; text-decoration:underline; margin-top:0.5rem; }
+.ob-skip:hover { color:rgba(255,255,255,0.7); }
+@media (max-width:600px) { .ob-grid { grid-template-columns:1fr 1fr; } .ob-title { font-size:22px; } }
+
+/* ── DEADLINE CALENDAR ── */
+.dl-year-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin:1rem 0; }
+.dl-year-btn { padding:10px; border-radius:8px; border:1px solid var(--border); background:var(--bg); font-family:'Arial',sans-serif; font-size:13px; font-weight:700; color:var(--navy); cursor:pointer; transition:all 0.12s; text-align:center; }
+.dl-year-btn:hover { background:var(--accent-light); border-color:var(--accent); }
+.dl-year-btn.selected { background:var(--navy); color:white; border-color:var(--navy); }
+.dl-milestone { background:var(--bg-card); border:1px solid var(--border); border-radius:8px; padding:12px 14px; margin-bottom:8px; display:flex; align-items:flex-start; gap:12px; }
+.dl-milestone-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; margin-top:4px; }
+.dl-milestone-label { font-family:'Arial',sans-serif; font-size:13px; font-weight:700; color:var(--navy-dark); }
+.dl-milestone-date { font-size:12px; color:var(--text-muted); }
+.dl-milestone-days { font-family:'Arial',sans-serif; font-size:12px; font-weight:700; margin-left:auto; flex-shrink:0; padding:2px 8px; border-radius:4px; }
+
+/* ── TIMELINE TRACKER ── */
+.tl-wrap { margin:1.5rem 0; }
+.tl-step { display:flex; gap:1rem; margin-bottom:0; position:relative; cursor:pointer; }
+.tl-step::before { content:''; position:absolute; left:17px; top:36px; bottom:-8px; width:2px; background:var(--border); z-index:0; }
+.tl-step:last-child::before { display:none; }
+.tl-dot-wrap { display:flex; flex-direction:column; align-items:center; flex-shrink:0; padding-top:6px; z-index:1; }
+.tl-dot { width:36px; height:36px; border-radius:50%; border:2px solid var(--border); background:white; display:flex; align-items:center; justify-content:center; font-family:'Arial',sans-serif; font-size:12px; font-weight:700; color:var(--text-muted); transition:all 0.2s; flex-shrink:0; }
+.tl-step.done .tl-dot { background:var(--green-light); border-color:var(--green); color:var(--green); }
+.tl-step.active .tl-dot { background:var(--navy); border-color:var(--navy); color:white; }
+.tl-step.done::before { background:var(--green); }
+.tl-body { background:var(--bg-card); border:1px solid var(--border); border-radius:8px; padding:12px 14px; margin-bottom:8px; flex:1; transition:border-color 0.15s; }
+.tl-step.active .tl-body { border-color:var(--navy); background:var(--accent-light); }
+.tl-step.done .tl-body { border-color:#a8d5b5; background:var(--green-light); }
+.tl-step-title { font-family:'Arial',sans-serif; font-size:14px; font-weight:700; color:var(--navy-dark); margin-bottom:3px; }
+.tl-step-desc { font-size:13px; color:var(--text-secondary); line-height:1.45; }
+.tl-step-action { font-family:'Arial',sans-serif; font-size:12px; font-weight:700; color:var(--accent); margin-top:6px; }
+.tl-btn { padding:7px 16px; border-radius:6px; font-family:'Arial',sans-serif; font-size:13px; font-weight:700; cursor:pointer; border:1px solid var(--navy); }
+.tl-btn.primary { background:var(--navy); color:white; }
+.tl-btn.secondary { background:white; color:var(--navy); }
+
+/* ── PRINT ── */
+.print-btn { display:inline-flex; align-items:center; gap:6px; font-family:'Arial',sans-serif; font-size:12px; font-weight:700; color:var(--text-muted); background:white; border:1px solid var(--border); border-radius:6px; padding:5px 12px; cursor:pointer; transition:all 0.12s; }
+.print-btn:hover { background:var(--bg); color:var(--navy); border-color:var(--navy); }
+.section-header-row { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
+.section-header-row h1 { margin-bottom:0; }
+@media print {
+  .site-header,.sidebar,nav.mob-drawer,.mob-overlay,.mob-nav-btn,.print-btn,footer,#onboarding-screen { display:none !important; }
+  .main { margin-left:0 !important; }
+  .section { display:block !important; padding:1rem !important; }
+  .section:not(.print-target) { display:none !important; }
+  body { font-size:12px; }
+}
+
+/* ── DOWNLOADS HUB ── */
+.dl-hub-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:1rem 0; }
+.dl-hub-card { background:var(--bg-card); border:1px solid var(--border); border-radius:8px; padding:1rem 1.25rem; display:flex; align-items:flex-start; gap:12px; text-decoration:none; transition:border-color 0.12s, background 0.12s; }
+.dl-hub-card:hover { border-color:var(--accent); background:var(--accent-light); }
+.dl-hub-icon { font-size:20px; flex-shrink:0; margin-top:1px; }
+.dl-hub-label { font-family:'Arial',sans-serif; font-size:13px; font-weight:700; color:var(--navy-dark); margin-bottom:3px; }
+.dl-hub-desc { font-size:12px; color:var(--text-secondary); line-height:1.4; }
+.dl-hub-tag { display:inline-block; font-family:'Arial',sans-serif; font-size:10px; font-weight:700; padding:1px 6px; border-radius:3px; margin-top:5px; text-transform:uppercase; letter-spacing:0.04em; }
+.tag-nysed { background:var(--accent-light); color:var(--accent); }
+.tag-nyc { background:var(--teal-light); color:var(--teal); }
+.tag-tool { background:var(--amber-light); color:var(--amber); }
+/* ── SEARCH ── */
+.search-wrap {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-light);
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 10;
+}
+.search-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  transition: border-color 0.12s;
+}
+.search-input-row:focus-within {
+  border-color: var(--accent);
+  background: white;
+}
+.search-icon { color: var(--text-muted); flex-shrink: 0; font-size: 14px; }
+.search-input {
+  border: none;
+  background: none;
+  font-family: 'Arial', sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  width: 100%;
+  outline: none;
+}
+.search-input::placeholder { color: var(--text-muted); }
+.search-clear {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+  line-height: 1;
+  display: none;
+}
+.search-results-count {
+  font-family: 'Arial', sans-serif;
+  font-size: 10px;
+  color: var(--text-muted);
+  padding: 4px 12px 0;
+}
+.nav-link.search-match {
+  background: #fffbea;
+  border-left-color: var(--amber);
+}
+.nav-link.search-match .search-highlight {
+  background: #fde68a;
+  border-radius: 2px;
+  padding: 0 1px;
+}
+.nav-link.search-no-match {
+  opacity: 0.3;
+  pointer-events: none;
+}
+.search-result-card {
+  margin: 4px 10px;
+  padding: 8px 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.1s, background 0.1s;
+}
+.search-result-card:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+.search-result-section {
+  font-family: 'Arial', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 2px;
+}
+.search-result-snippet {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.search-result-snippet mark {
+  background: #fde68a;
+  border-radius: 2px;
+  padding: 0 1px;
+  font-style: normal;
+}
+.search-no-results {
+  padding: 12px;
+  font-family: 'Arial', sans-serif;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+}
 </style>
 </head>
 <body>
+
+<!-- ONBOARDING SCREEN -->
+<div id="onboarding-screen">
+  <div class="ob-logo">NYC Public Schools · Office of Student Pathways</div>
+  <h1 class="ob-title">NYC CTE Playbook</h1>
+  <p class="ob-sub">To get you started, tell us which best describes your role. We'll point you to the most relevant sections first.</p>
+  <div class="ob-grid">
+    <div class="ob-card" onclick="obSelect('cteteacher',['cteteacher','certification','wbl','curriculum'])">
+      <div class="ob-card-icon">🎓</div>
+      <div class="ob-card-label">New CTE Teacher</div>
+      <div class="ob-card-desc">Just entering the role from industry or another teaching area</div>
+    </div>
+    <div class="ob-card" onclick="obSelect('approval',['approval','selfstudy','external','nysed'])">
+      <div class="ob-card-icon">🔄</div>
+      <div class="ob-card-label">Program Up for Re-Approval</div>
+      <div class="ob-card-desc">Navigating the reapproval process and upcoming deadlines</div>
+    </div>
+    <div class="ob-card" onclick="obSelect('quality',['quality','wbl','assessment','curriculum'])">
+      <div class="ob-card-icon">⭐</div>
+      <div class="ob-card-label">Managing an Approved Program</div>
+      <div class="ob-card-desc">Program is running — focused on quality and compliance</div>
+    </div>
+    <div class="ob-card" onclick="obSelect('wbl',['wbl','rolemapping','selfstudy','nysed'])">
+      <div class="ob-card-icon">🤝</div>
+      <div class="ob-card-label">WBL Coordinator</div>
+      <div class="ob-card-desc">Managing work-based learning planning and partnerships</div>
+    </div>
+    <div class="ob-card" onclick="obSelect('about',['about','approval','rolemapping','timeline'])">
+      <div class="ob-card-icon">🏫</div>
+      <div class="ob-card-label">Administrator / AP</div>
+      <div class="ob-card-desc">Oversight role — need the big picture and sign-off requirements</div>
+    </div>
+    <div class="ob-card" onclick="obSelect('quality',['quality','disabilities','wbl','glossary'])">
+      <div class="ob-card-icon">🧭</div>
+      <div class="ob-card-label">College &amp; Career Advisor</div>
+      <div class="ob-card-desc">Focused on student pathways and employability profiles</div>
+    </div>
+  </div>
+  <button class="ob-skip" onclick="obSkip()">Skip — take me straight to the Playbook</button>
+</div>
 
 <!-- HEADER -->
 <header class="site-header">
@@ -741,6 +960,16 @@ strong { font-weight: 700; color: var(--navy-dark); }
 
 <!-- SIDEBAR NAV -->
 <nav class="sidebar">
+  <div class="search-wrap">
+    <div class="search-input-row">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="sidebar-search" type="text" placeholder="Search the Playbook..." oninput="searchPlaybook(this.value)" autocomplete="off">
+      <button class="search-clear" id="search-clear-btn" onclick="clearSearch()" title="Clear search">✕</button>
+    </div>
+    <div class="search-results-count" id="search-count"></div>
+  </div>
+  <div id="search-results-list"></div>
+  <div id="sidebar-nav-content">
   <div class="nav-section-label">Overview</div>
   <a class="nav-link active" onclick="show('about')">
     <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8"/><path d="M10 9v5M10 7h.01"/></svg>
@@ -807,6 +1036,21 @@ strong { font-weight: 700; color: var(--navy-dark); }
   </a>
 
   <div class="nav-section-label">Reference</div>
+  <a class="nav-link" onclick="show('timeline')">
+    <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="8"/><path d="M10 6v4l3 3"/></svg>
+    Approval Timeline
+    <span class="nav-tool-badge">NEW</span>
+  </a>
+  <a class="nav-link" onclick="show('deadlines')">
+    <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M3 8h14M8 4V2M12 4V2"/></svg>
+    Deadline Calendar
+    <span class="nav-tool-badge">NEW</span>
+  </a>
+  <a class="nav-link" onclick="show('downloads')">
+    <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 3v10M6 9l4 4 4-4M4 16h12"/></svg>
+    Downloads &amp; Templates
+    <span class="nav-tool-badge">NEW</span>
+  </a>
   <a class="nav-link" onclick="show('rolemapping')">
     <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5" cy="5" r="2"/><circle cx="15" cy="5" r="2"/><circle cx="10" cy="15" r="2"/><path d="M5 7v2a5 5 0 0010 0V7M10 13v-1"/></svg>
     Who Does What
@@ -819,6 +1063,7 @@ strong { font-weight: 700; color: var(--navy-dark); }
     <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h12M4 10h12M4 14h8"/></svg>
     Glossary &amp; Resources
   </a>
+  </div><!-- end sidebar-nav-content -->
 </nav>
 
 <!-- MOBILE DRAWER NAV LINKS (mirrors sidebar) -->
@@ -840,6 +1085,9 @@ strong { font-weight: 700; color: var(--navy-dark); }
   <a class="nav-link" onclick="mobShow('disabilities')">Students with Disabilities</a>
   <a class="nav-link" onclick="mobShow('quality')">Quality Continuum</a>
   <div class="nav-section-label">Reference</div>
+  <a class="nav-link" onclick="mobShow('timeline')">Approval Timeline <span class="nav-tool-badge">NEW</span></a>
+  <a class="nav-link" onclick="mobShow('deadlines')">Deadline Calendar <span class="nav-tool-badge">NEW</span></a>
+  <a class="nav-link" onclick="mobShow('downloads')">Downloads &amp; Templates <span class="nav-tool-badge">NEW</span></a>
   <a class="nav-link" onclick="mobShow('rolemapping')">Who Does What</a>
   <a class="nav-link" onclick="mobShow('contacts')">Contact Your CTE Team</a>
   <a class="nav-link" onclick="mobShow('glossary')">Glossary &amp; Resources</a>
@@ -1424,7 +1672,7 @@ strong { font-weight: 700; color: var(--navy-dark); }
   <!-- ══ PROGRAM APPROVAL ══ -->
   <section class="section" id="approval">
     <div class="section-eyebrow">Core Requirements</div>
-    <h1 class="section-title">Program Approval</h1>
+    <div class="section-header-row"><h1 class="section-title">Program Approval</h1><button class="print-btn" onclick="printSection('approval')">🖨 Print this section</button></div>
 
     <p>All CTE programs in New York City Public Schools must be formally approved by NYSED to ensure alignment with state regulations, workforce expectations, and the requirements for the 4+1 CTE Pathway, technical endorsement, and integrated/specialized academic credit.</p>
 
@@ -1914,7 +2162,7 @@ strong { font-weight: 700; color: var(--navy-dark); }
   <!-- ══ SELF-STUDY ══ -->
   <section class="section" id="selfstudy">
     <div class="section-eyebrow">People &amp; Process</div>
-    <h1 class="section-title">Self-Study Process</h1>
+    <div class="section-header-row"><h1 class="section-title">Self-Study Process</h1><button class="print-btn" onclick="printSection('selfstudy')">🖨 Print this section</button></div>
 
     <p>The Self-Study is the essential first step in the NYSED CTE program approval or re-approval process. In NYC Public Schools, this process provides a structured opportunity for internal school stakeholders to reflect deeply on the strengths and needs of their CTE program, ensuring it is aligned with both NYSED requirements and the realities of our city's dynamic workforce.</p>
 
@@ -1987,7 +2235,7 @@ strong { font-weight: 700; color: var(--navy-dark); }
   <!-- ══ EXTERNAL REVIEW ══ -->
   <section class="section" id="external">
     <div class="section-eyebrow">People &amp; Process</div>
-    <h1 class="section-title">External Review</h1>
+    <div class="section-header-row"><h1 class="section-title">External Review</h1><button class="print-btn" onclick="printSection('external')">🖨 Print this section</button></div>
 
     <p>As part of the NYSED CTE program approval and re-approval process, NYC public high schools are required to conduct an External Review. This process ensures that each CTE program aligns with current industry standards, meets NYSED criteria, and responds to the unique needs of NYC students, schools, and local labor markets.</p>
 
@@ -2060,7 +2308,7 @@ strong { font-weight: 700; color: var(--navy-dark); }
   <!-- ══ NYSED APPLICATION ══ -->
   <section class="section" id="nysed">
     <div class="section-eyebrow">People &amp; Process</div>
-    <h1 class="section-title">NYSED Application Process</h1>
+    <div class="section-header-row"><h1 class="section-title">NYSED Application Process</h1><button class="print-btn" onclick="printSection('nysed')">🖨 Print this section</button></div>
 
     <p>All CTE programs in New York City Public Schools must be formally approved by NYSED to ensure alignment with state regulations, workforce expectations, and the requirements for the 4+1 CTE Pathway, technical endorsement, and integrated/specialized academic credit.</p>
 
@@ -2430,6 +2678,133 @@ strong { font-weight: 700; color: var(--navy-dark); }
     <div class="section-footer">
       <span>NYC CTE Playbook — Office of Student Pathways</span>
       <span>Contact Your CTE Team</span>
+    </div>
+  </section>
+
+  <!-- ══ APPROVAL TIMELINE ══ -->
+  <section class="section" id="timeline">
+    <div class="section-eyebrow">Reference</div>
+    <h1 class="section-title">Approval Timeline Tracker</h1>
+    <p>The approval and re-approval process follows a specific sequence. Use this tracker to mark where your program currently stands — the active step shows what you need to do next. Click any completed step to mark it done.</p>
+    <div class="callout info">
+      <em class="callout-icon">ℹ</em>
+      <div class="callout-body">
+        <div class="callout-title">This tracker is for your reference only</div>
+        <p>Nothing here is submitted or saved. Use it to orient your team at the start of an approval cycle and return to it regularly to track progress.</p>
+      </div>
+    </div>
+    <div class="tl-wrap" id="tl-container"></div>
+    <div style="display:flex;gap:8px;margin-top:1.25rem;flex-wrap:wrap;">
+      <button class="tl-btn primary" onclick="tlAdvance()">Mark current step complete →</button>
+      <button class="tl-btn secondary" onclick="tlReset()">Reset tracker</button>
+    </div>
+    <div class="section-footer">
+      <span>NYC CTE Playbook — Office of Student Pathways</span>
+      <span>Approval Timeline</span>
+    </div>
+  </section>
+
+  <!-- ══ DEADLINE CALENDAR ══ -->
+  <section class="section" id="deadlines">
+    <div class="section-eyebrow">Reference</div>
+    <h1 class="section-title">Deadline Calendar</h1>
+    <p>Select the year your program approval expires. The calendar will calculate your specific deadlines and show how much time you have for each milestone.</p>
+
+    <h2>When does your current approval expire?</h2>
+    <div class="dl-year-grid" id="dl-year-grid"></div>
+    <div id="dl-output" style="margin-top:1rem;"></div>
+
+    <div class="section-footer">
+      <span>NYC CTE Playbook — Office of Student Pathways</span>
+      <span>Deadline Calendar</span>
+    </div>
+  </section>
+
+  <!-- ══ DOWNLOADS ══ -->
+  <section class="section" id="downloads">
+    <div class="section-eyebrow">Reference</div>
+    <h1 class="section-title">Downloads &amp; Templates</h1>
+    <p>All official forms, templates, and reference documents for NYC CTE program approval and management in one place. Documents marked NYSED are official state forms. Documents marked NYC are Office of Student Pathways resources.</p>
+
+    <h2>Program Approval</h2>
+    <div class="dl-hub-grid">
+      <a class="dl-hub-card" href="https://www.nysed.gov/career-technical-education/applications-cte-program-approval" target="_blank">
+        <span class="dl-hub-icon">📄</span>
+        <div><div class="dl-hub-label">Initial Approval Application</div><div class="dl-hub-desc">Part 1 (Word) and Part 2 (PDF) for new CTE programs</div><span class="dl-hub-tag tag-nysed">NYSED</span></div>
+      </a>
+      <a class="dl-hub-card" href="https://www.nysed.gov/career-technical-education/applications-cte-program-approval" target="_blank">
+        <span class="dl-hub-icon">🔄</span>
+        <div><div class="dl-hub-label">Re-Approval Application</div><div class="dl-hub-desc">Part 1 (Word) and Part 2 (PDF) for existing programs</div><span class="dl-hub-tag tag-nysed">NYSED</span></div>
+      </a>
+      <a class="dl-hub-card" href="https://www.nysed.gov/career-technical-education/applications-cte-program-approval" target="_blank">
+        <span class="dl-hub-icon">✏️</span>
+        <div><div class="dl-hub-label">Program Amendment Form</div><div class="dl-hub-desc">Required before implementing any program changes</div><span class="dl-hub-tag tag-nysed">NYSED</span></div>
+      </a>
+      <a class="dl-hub-card" href="https://www.nysed.gov/career-technical-education/applications-cte-program-approval" target="_blank">
+        <span class="dl-hub-icon">📚</span>
+        <div><div class="dl-hub-label">Course Sequence Amendment Addendum</div><div class="dl-hub-desc">Required when curriculum content is changing</div><span class="dl-hub-tag tag-nysed">NYSED</span></div>
+      </a>
+    </div>
+
+    <h2>Curriculum</h2>
+    <div class="dl-hub-grid">
+      <a class="dl-hub-card" href="https://docs.google.com/document/d/1JETt-H6OnFrBsp4ZCvCqIGAkzyVKrUrw/edit?usp=sharing&ouid=110051320451444652705&rtpof=true&sd=true" target="_blank">
+        <span class="dl-hub-icon">📋</span>
+        <div><div class="dl-hub-label">Blank Crosswalk Template</div><div class="dl-hub-desc">Official template for mapping course content to NYSED and industry standards</div><span class="dl-hub-tag tag-nyc">NYC</span></div>
+      </a>
+      <a class="dl-hub-card" href="https://www.nysed.gov/career-technical-education/new-york-state-learning-standards" target="_blank">
+        <span class="dl-hub-icon">📐</span>
+        <div><div class="dl-hub-label">CDOS Learning Standards</div><div class="dl-hub-desc">NYS Career Development and Occupational Studies standards reference</div><span class="dl-hub-tag tag-nysed">NYSED</span></div>
+      </a>
+    </div>
+
+    <h2>Work-Based Learning</h2>
+    <div class="dl-hub-grid">
+      <a class="dl-hub-card" href="https://www.nysed.gov/sites/default/files/programs/career-technical-education/wbl-manual.pdf" target="_blank">
+        <span class="dl-hub-icon">📖</span>
+        <div><div class="dl-hub-label">WBL Manual (September 2024)</div><div class="dl-hub-desc">Complete manual covering WBL types, labor law, and coordinator certification</div><span class="dl-hub-tag tag-nysed">NYSED</span></div>
+      </a>
+      <a class="dl-hub-card" href="https://www.nysed.gov/career-technical-education/work-based-learning" target="_blank">
+        <span class="dl-hub-icon">📝</span>
+        <div><div class="dl-hub-label">WBL Sample Forms</div><div class="dl-hub-desc">Memorandum of agreement, training plan, and emergency authorization templates</div><span class="dl-hub-tag tag-nysed">NYSED</span></div>
+      </a>
+    </div>
+
+    <h2>Technical Assessment</h2>
+    <div class="dl-hub-grid">
+      <a class="dl-hub-card" href="https://www.nysed.gov/career-technical-education/technical-assessment" target="_blank">
+        <span class="dl-hub-icon">📊</span>
+        <div><div class="dl-hub-label">Technical Assessment Guidelines</div><div class="dl-hub-desc">Three-part assessment requirements, approved vendors, and consortium guidance</div><span class="dl-hub-tag tag-nysed">NYSED</span></div>
+      </a>
+    </div>
+
+    <h2>Reference</h2>
+    <div class="dl-hub-grid">
+      <a class="dl-hub-card" href="https://www.nysed.gov/career-technical-education" target="_blank">
+        <span class="dl-hub-icon">🏛️</span>
+        <div><div class="dl-hub-label">NYSED Office of CTE</div><div class="dl-hub-desc">Main portal for all NYSED CTE guidance, policies, and news</div><span class="dl-hub-tag tag-nysed">NYSED</span></div>
+      </a>
+      <a class="dl-hub-card" href="https://careerzone.labor.ny.gov" target="_blank">
+        <span class="dl-hub-icon">🔭</span>
+        <div><div class="dl-hub-label">CareerZone</div><div class="dl-hub-desc">NYS career exploration platform with job profiles and interest assessments</div><span class="dl-hub-tag tag-nysed">NYSED</span></div>
+      </a>
+      <a class="dl-hub-card" href="https://futureready.nyc" target="_blank">
+        <span class="dl-hub-icon">🌆</span>
+        <div><div class="dl-hub-label">Future Ready NYC</div><div class="dl-hub-desc">Citywide career-connected learning initiative and resources</div><span class="dl-hub-tag tag-nyc">NYC</span></div>
+      </a>
+    </div>
+
+    <div class="callout info" style="margin-top:1.5rem;">
+      <em class="callout-icon">ℹ</em>
+      <div class="callout-body">
+        <div class="callout-title">Missing a document?</div>
+        <p>Contact your Borough Program Quality Manager / Program Pathway Coach. They can share additional templates, school-specific forms, and any resources not listed here.</p>
+      </div>
+    </div>
+
+    <div class="section-footer">
+      <span>NYC CTE Playbook — Office of Student Pathways</span>
+      <span>Downloads &amp; Templates</span>
     </div>
   </section>
 
@@ -3344,10 +3719,271 @@ function mobShow(id){
   });
 }
 
-// ── FINAL INIT (after all data and functions defined) ──
+// ── ONBOARDING ──
+const OB_ROLE_HIGHLIGHTS = {};
+
+function obSelect(firstSection, highlights) {
+  localStorage.setItem('cte_ob_done', '1');
+  localStorage.setItem('cte_ob_role', firstSection);
+  document.getElementById('onboarding-screen').style.display = 'none';
+  show(firstSection);
+  // Briefly highlight recommended nav links
+  highlights.forEach(id => {
+    const links = document.querySelectorAll('.nav-link');
+    links.forEach(l => {
+      if (l.getAttribute('onclick') && l.getAttribute('onclick').includes("'"+id+"'")) {
+        l.style.background = 'var(--amber-light)';
+        setTimeout(() => { l.style.background = ''; }, 3000);
+      }
+    });
+  });
+}
+
+function obSkip() {
+  localStorage.setItem('cte_ob_done', '1');
+  document.getElementById('onboarding-screen').style.display = 'none';
+  show('about');
+}
+
+function obInit() {
+  if (localStorage.getItem('cte_ob_done') === '1') {
+    document.getElementById('onboarding-screen').style.display = 'none';
+  }
+}
+
+// ── DEADLINE CALENDAR ──
+const TODAY = new Date();
+const DL_YEARS = [2025, 2026, 2027, 2028];
+let dlSelectedYear = null;
+
+function buildDeadlineYears() {
+  const grid = document.getElementById('dl-year-grid');
+  if (!grid) return;
+  grid.innerHTML = DL_YEARS.map(y =>
+    `<button class="dl-year-btn" id="dly-${y}" onclick="dlSelectYear(${y})">June 30, ${y}</button>`
+  ).join('');
+}
+
+function dlSelectYear(year) {
+  dlSelectedYear = year;
+  DL_YEARS.forEach(y => {
+    const btn = document.getElementById('dly-' + y);
+    if (btn) btn.className = 'dl-year-btn' + (y === year ? ' selected' : '');
+  });
+  dlRenderOutput(year);
+}
+
+function dlDaysFrom(target) {
+  const diff = target - TODAY;
+  return Math.ceil(diff / (1000 * 60 * 60 * 24));
+}
+
+function dlStatusPill(days) {
+  if (days < 0) return {text:'Passed', bg:'var(--border-light)', color:'var(--text-muted)'};
+  if (days <= 30) return {text:days+'d', bg:'var(--red-light)', color:'var(--red)'};
+  if (days <= 90) return {text:days+'d', bg:'var(--amber-light)', color:'var(--amber)'};
+  return {text:days+'d', bg:'var(--green-light)', color:'var(--green)'};
+}
+
+function dlRenderOutput(year) {
+  const out = document.getElementById('dl-output');
+  if (!out) return;
+
+  const milestones = [
+    { label: 'Begin self-study process', date: new Date(year-1, 5, 30), // 12 months before expiry
+      desc: 'Form your self-study committee and begin the internal review. Allow 6–12 months for the full process.' },
+    { label: 'Host external review', date: new Date(year-1, 11, 31), // 6 months before
+      desc: 'External review should be completed at least 6 months before your re-approval deadline.' },
+    { label: 'Submit re-approval application', date: new Date(year, 5, 30),
+      desc: 'Complete application must be submitted by June 30 to retain approval for the following school year.' },
+    { label: 'Final approval deadline', date: new Date(year, 8, 30),
+      desc: 'If approval is not received by September 30, the program is lapsed and credits cannot be awarded.' },
+  ];
+
+  const expiry = new Date(year, 5, 30);
+  const daysToExpiry = dlDaysFrom(expiry);
+  const expiryPill = dlStatusPill(daysToExpiry);
+
+  let html = `
+    <div style="background:var(--navy-dark);border-radius:10px;padding:1.25rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+      <div>
+        <div style="font-family:'Arial',sans-serif;font-size:11px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">Your approval expires</div>
+        <div style="font-family:'Arial',sans-serif;font-size:22px;font-weight:700;color:white;">June 30, ${year}</div>
+      </div>
+      <div style="margin-left:auto;background:${expiryPill.bg};color:${expiryPill.color};font-family:'Arial',sans-serif;font-size:13px;font-weight:700;padding:6px 14px;border-radius:999px;">
+        ${daysToExpiry < 0 ? 'Expired' : daysToExpiry + ' days away'}
+      </div>
+    </div>`;
+
+  milestones.forEach((m, i) => {
+    const days = dlDaysFrom(m.date);
+    const pill = dlStatusPill(days);
+    const passed = days < 0;
+    html += `
+      <div class="dl-milestone" style="${passed ? 'opacity:0.55;' : ''}">
+        <div class="dl-milestone-dot" style="background:${passed ? 'var(--border)' : pill.color};"></div>
+        <div style="flex:1;">
+          <div class="dl-milestone-label">${passed ? '✓ ' : ''}${m.label}</div>
+          <div class="dl-milestone-date">${m.date.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div>
+          <div style="font-size:12px;color:var(--text-secondary);margin-top:3px;">${m.desc}</div>
+        </div>
+        <div class="dl-milestone-days" style="background:${pill.bg};color:${pill.color};">
+          ${passed ? 'Done' : pill.text}
+        </div>
+      </div>`;
+  });
+
+  if (daysToExpiry > 0 && daysToExpiry <= 90) {
+    html += `<div class="callout danger" style="margin-top:1rem;"><em class="callout-icon" style="font-style:normal;">🚨</em><div class="callout-body"><div class="callout-title">Urgent — contact your Borough Program Quality Manager now</div><p>Your re-approval deadline is within 90 days. Reach out to your Borough contact immediately if you have not already submitted your application.</p></div></div>`;
+  } else if (daysToExpiry > 90 && daysToExpiry <= 180) {
+    html += `<div class="callout warning" style="margin-top:1rem;"><em class="callout-icon">⚠</em><div class="callout-body"><div class="callout-title">Within 6 months — your external review should already be complete</div><p>If your external review has not been scheduled, contact your Borough Program Quality Manager now to discuss your timeline.</p></div></div>`;
+  }
+
+  out.innerHTML = html;
+}
+
+// ── TIMELINE TRACKER ──
+const TL_STEPS = [
+  { title: 'Form self-study committee', desc: 'Assemble a committee including CTE teachers, academic teachers, admin, guidance, SpEd, industry partners, and postsecondary representatives.', action: 'Go to Self-Study Process', section: 'selfstudy' },
+  { title: 'Conduct self-study meetings', desc: 'Hold multiple working sessions over 2–4 months. Document all meetings with notes — agendas alone are not sufficient.', action: 'Review documentation requirements', section: 'selfstudy' },
+  { title: 'Complete curriculum crosswalk', desc: 'Map all courses to NYSED learning standards, CDOS standards, and industry competencies. Complete the official Blank Crosswalk Template.', action: 'Open Crosswalk Builder', section: 'curriculum' },
+  { title: 'Host external review', desc: 'Invite at least 2 industry representatives, a postsecondary partner, and other stakeholders. Share the self-study summary in advance.', action: 'Review external review guidance', section: 'external' },
+  { title: 'Prepare application packet', desc: 'Compile all required documents: self-study minutes, external review feedback, crosswalk, WBL plan, employability profile, assessment details, articulation agreement, and teacher certification evidence.', action: 'See required components', section: 'approval' },
+  { title: 'Submit to CTE Central Office', desc: 'Send your complete application package to your Borough Program Quality Manager / Program Pathway Coach — not directly to NYSED.', action: 'Review submission guidelines', section: 'nysed' },
+  { title: 'Respond to NYSED feedback', desc: 'Any issues flagged by NYSED must be resolved immediately. Your Borough contact will relay feedback and coordinate responses.', action: 'See amendment guidance', section: 'nysed' },
+  { title: 'Receive final approval', desc: 'Final approval must be received by September 30 to retain eligibility for credits, endorsements, and SIRS reporting in the current school year.', action: 'Review deadline calendar', section: 'deadlines' },
+];
+
+let tlCurrent = 0;
+
+function buildTimeline() {
+  const container = document.getElementById('tl-container');
+  if (!container) return;
+  container.innerHTML = TL_STEPS.map((s, i) => `
+    <div class="tl-step${i < tlCurrent ? ' done' : i === tlCurrent ? ' active' : ''}" id="tl-step-${i}" onclick="tlJumpTo(${i})">
+      <div class="tl-dot-wrap">
+        <div class="tl-dot">${i < tlCurrent ? '✓' : i + 1}</div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-step-title">${s.title}</div>
+        <div class="tl-step-desc">${s.desc}</div>
+        ${i === tlCurrent ? `<div class="tl-step-action" onclick="event.stopPropagation();show('${s.section}')">${s.action} →</div>` : ''}
+      </div>
+    </div>`).join('');
+}
+
+function tlAdvance() {
+  if (tlCurrent < TL_STEPS.length - 1) { tlCurrent++; buildTimeline(); }
+  else {
+    const container = document.getElementById('tl-container');
+    if (container) container.innerHTML += `<div class="callout success" style="margin-top:1rem;"><em class="callout-icon" style="font-style:normal;">🎉</em><div class="callout-body"><div class="callout-title">All steps complete</div><p>Your program approval process is complete. Set a reminder to begin the next cycle 12 months before your new expiration date.</p></div></div>`;
+  }
+}
+
+function tlJumpTo(i) { if (i <= tlCurrent) { tlCurrent = i; buildTimeline(); } }
+function tlReset() { tlCurrent = 0; buildTimeline(); }
+
+// ── PRINT SECTION ──
+function printSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('print-target'));
+  const target = document.getElementById(id);
+  if (target) target.classList.add('print-target');
+  window.print();
+  setTimeout(() => { if (target) target.classList.remove('print-target'); }, 1000);
+}
+
+
+// ── SEARCH ──
+const SEARCH_INDEX = [
+  { id:'about', title:'About CTE', keywords:'cte career technical education nyc public schools chancellor vision 65000 students 300 programs pillars program components graduation endorsement industry partnerships' },
+  { id:'cteteacher', title:'Being a CTE Teacher', keywords:'cte teacher industry professional classroom dual identity wbl work based learning academic alignment culinary math ratios proportions scope sequence culinary health sciences computer science construction technology convergence advisory board ctso cte quality continuum mentor coaching' },
+  { id:'certification', title:'Teacher Certification', keywords:'trans-a transitional-a certification initial professional certificate nysed teach cqst option a b c d e 3 years 5 years 9 credits education coursework dasa child abuse school violence ctle hr connects teacher application' },
+  { id:'quiz', title:'So You Think You Know CTE?', keywords:'quiz knowledge test scenario compliance gaps agendas lapsed approval assessment consortium wbl hours amendment faculty self study external review endorsement' },
+  { id:'approval', title:'Program Approval', keywords:'program approval reapproval initial application checklist required components self study external review crosswalk wbl plan employability profile technical assessment articulation agreement teacher certification october june september deadline lapsed sirs 4+1 pathway integrated specialized credits naming convention common pitfalls self check tool' },
+  { id:'assessment', title:'Technical Assessment', keywords:'technical assessment three parts written examination performance assessment student project portfolio industry developed third party vendor local consortium general employability workkeys barbering compTIA aws ase nocti nys licensing endorsement rubric cut score' },
+  { id:'wbl', title:'Work-Based Learning', keywords:'work based learning wbl 54 hours minimum career awareness exploration preparation internship job shadowing service learning school based enterprise industry project career exploration caps documentation supervisor verification equity inclusion ell mll udl wbl coordinator plan stakeholder engagement continuous improvement cdos' },
+  { id:'curriculum', title:'Curriculum & Instruction', keywords:'curriculum instruction sced code school courses exchange data sirs reporting crosswalk builder cdos standards academic standards industry standards cfm career financial management 16 modules blank crosswalk template stars course code mapping units lesson plans syllabus' },
+  { id:'selfstudy', title:'Self-Study Process', keywords:'self study committee process purpose documentation meeting minutes agendas not accepted labor market relevance accessibility equity feasibility enrollment curriculum mapping wbl employability assessment articulation teacher certification six months one year district commitment' },
+  { id:'external', title:'External Review', keywords:'external review committee purpose gaps recommended strategies industry partners self study separation walkthrough 12 18 months re approval preparation hosting agenda documentation student work samples' },
+  { id:'nysed', title:'NYSED Application', keywords:'nysed application process initial approval reapproval amendment part 1 part 2 word pdf submission borough program quality manager pathway coach central office amendment faculty assessment course sequence articulation employability' },
+  { id:'disabilities', title:'Students with Disabilities', keywords:'students disabilities iep 504 plan inclusion udl universal design learning assistive technology scaffolding multisensory idea ada wbl accommodations self advocacy 21.7 percent cte concentrators task analysis portfolio ctso' },
+  { id:'quality', title:'Quality Continuum', keywords:'cte quality continuum framework six dimensions curriculum instruction assessment accountability work based learning industry partnerships postsecondary partnerships college career advising rubric growth exploration planning application transition' },
+  { id:'timeline', title:'Approval Timeline', keywords:'approval timeline tracker steps sequence self study external review application submit receive approval milestones next steps progress' },
+  { id:'deadlines', title:'Deadline Calendar', keywords:'deadline calendar expiration year june 30 october 1 september 30 countdown days milestones urgent reapproval initial approval lapsed sirs reporting' },
+  { id:'rolemapping', title:'Who Does What', keywords:'role mapping document ownership cte teacher wbl coordinator ap principal college career advisor stars programmer primary contributor self study crosswalk lesson plans technical assessment wbl logs enrollment sirs extra work uft responsibilities team' },
+  { id:'contacts', title:'Contact Your CTE Team', keywords:'contact cte team borough program quality manager pathway coach bronx brooklyn manhattan queens staten island central office office student pathways submission' },
+  { id:'downloads', title:'Downloads & Templates', keywords:'downloads templates forms blank crosswalk initial approval reapproval amendment wbl manual technical assessment cdos standards careerzone future ready nyc official documents resources' },
+  { id:'glossary', title:'Glossary & Resources', keywords:'glossary articulation agreement cte career cluster cdos commissioner regulations program approval technical assessment employability profile sced sirs transitional a wbl work based learning resources nysed careerzone future ready' },
+];
+
+function searchPlaybook(query) {
+  const q = query.trim().toLowerCase();
+  const clearBtn = document.getElementById('search-clear-btn');
+  const countEl = document.getElementById('search-count');
+  const resultsList = document.getElementById('search-results-list');
+  const navContent = document.getElementById('sidebar-nav-content');
+  if (clearBtn) clearBtn.style.display = q ? 'block' : 'none';
+  if (!q) {
+    if (countEl) countEl.textContent = '';
+    if (resultsList) resultsList.innerHTML = '';
+    if (navContent) navContent.style.display = 'block';
+    return;
+  }
+  const terms = q.split(/\s+/).filter(Boolean);
+  const scored = SEARCH_INDEX.map(item => {
+    const searchable = (item.title + ' ' + item.keywords).toLowerCase();
+    let score = 0;
+    terms.forEach(term => {
+      const count = (searchable.match(new RegExp(escRegex(term), 'g')) || []).length;
+      if (item.title.toLowerCase().includes(term)) score += count * 3;
+      else score += count;
+    });
+    return { ...item, score };
+  }).filter(item => item.score > 0).sort((a, b) => b.score - a.score);
+  if (navContent) navContent.style.display = 'none';
+  if (scored.length === 0) {
+    if (countEl) countEl.textContent = 'No results';
+    if (resultsList) resultsList.innerHTML = `<div class="search-no-results">No sections match "<strong>${escHtml(query)}</strong>"<br><span style="font-size:11px;">Try a different keyword</span></div>`;
+    return;
+  }
+  if (countEl) countEl.textContent = scored.length + ' section' + (scored.length === 1 ? '' : 's') + ' found';
+  const html = scored.map(item => {
+    let snippet = '';
+    const kws = item.keywords.split(' ');
+    for (const term of terms) {
+      const idx = kws.findIndex(w => w.includes(term));
+      if (idx !== -1) {
+        const start = Math.max(0, idx - 3);
+        const end = Math.min(kws.length, idx + 6);
+        snippet = kws.slice(start, end).join(' ');
+        terms.forEach(t => { snippet = snippet.replace(new RegExp('('+escRegex(t)+')', 'gi'), '<mark>$1</mark>'); });
+        break;
+      }
+    }
+    const highlightedTitle = terms.reduce((t, term) =>
+      t.replace(new RegExp('('+escRegex(term)+')', 'gi'), '<mark>$1</mark>'), escHtml(item.title));
+    return `<div class="search-result-card" onclick="show('${item.id}');clearSearch();">
+      <div class="search-result-section">${highlightedTitle}</div>
+      ${snippet ? `<div class="search-result-snippet">...${snippet}...</div>` : ''}
+    </div>`;
+  }).join('');
+  if (resultsList) resultsList.innerHTML = html;
+}
+
+function clearSearch() {
+  const input = document.getElementById('sidebar-search');
+  if (input) { input.value = ''; input.focus(); }
+  searchPlaybook('');
+}
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escRegex(s) { return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+
 buildQuiz();
 buildRoleMap();
 buildContacts();
+buildDeadlineYears();
+buildTimeline();
+obInit();
 
 </script>
 <footer style="
