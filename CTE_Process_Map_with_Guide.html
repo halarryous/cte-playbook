@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CTE Quality Process Map — NYC DOE Office of Student Pathways</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple:      #534AB7;
+    --purple-lite: #EEEDFE;
+    --purple-mid:  #AFA9EC;
+    --teal:        #0F6E56;
+    --teal-lite:   #E1F5EE;
+    --teal-mid:    #5DCAA5;
+    --amber:       #BA7517;
+    --amber-lite:  #FAEEDA;
+    --coral:       #993C1D;
+    --coral-lite:  #FAECE7;
+    --green-lite:  #EAF3DE;
+    --green-mid:   #97C459;
+    --green-dark:  #27500A;
+    --gray1:       #444441;
+    --gray2:       #5F5E5A;
+    --gray3:       #D3D1C7;
+    --gray-bg:     #F1EFE8;
+    --white:       #FFFFFF;
+    --bg:          #FAFAF8;
+    --card-bg:     #FFFFFF;
+    --border:      rgba(0,0,0,0.12);
+    --text-primary:   #2C2C2A;
+    --text-secondary: #5F5E5A;
+    --text-tertiary:  #888780;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:          #1C1C1A;
+      --card-bg:     #242422;
+      --border:      rgba(255,255,255,0.1);
+      --text-primary:   #E8E6DF;
+      --text-secondary: #B4B2A9;
+      --text-tertiary:  #888780;
+      --gray-bg:     #2C2C2A;
+    }
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    background: var(--card-bg);
+    border-bottom: 0.5px solid var(--border);
+    padding: 20px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .header-left .eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 4px;
+  }
+  .header-left h1 {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+  .header-right {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    text-align: right;
+    line-height: 1.5;
+  }
+
+  /* ── Layout ── */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 28px 24px 60px;
+  }
+
+  /* ── Nav ── */
+  .view-nav {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .vnav-btn {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 7px 16px;
+    border-radius: 20px;
+    border: 0.5px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all .15s;
+    font-family: inherit;
+  }
+  .vnav-btn:hover { background: var(--gray-bg); }
+  .vnav-btn.active {
+    background: var(--purple);
+    color: var(--purple-lite);
+    border-color: var(--purple);
+  }
+
+  /* ── Panel label ── */
+  .panel-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 12px;
+  }
+
+  /* ── Panels ── */
+  .view-panel { display: none; }
+  .view-panel.active { display: block; }
+
+  /* ── SVG wrapper ── */
+  .svg-wrap {
+    background: var(--card-bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    padding: 8px;
+  }
+  .svg-wrap svg { display: block; width: 100%; }
+
+  /* ── SVG classes (mirroring the widget pre-built classes) ── */
+  svg text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; }
+  svg .t  { font-size: 14px; font-weight: 400; fill: var(--text-primary); }
+  svg .ts { font-size: 12px; font-weight: 400; fill: var(--text-secondary); }
+  svg .th { font-size: 14px; font-weight: 500; fill: var(--text-primary); }
+
+  svg .node { cursor: pointer; }
+  svg .node:hover rect, svg .node:hover circle { opacity: .88; }
+
+  svg .arr { stroke: var(--gray3); stroke-width: 1.5; fill: none; }
+  svg .leader { stroke: var(--gray3); stroke-width: 0.5; stroke-dasharray: 3 3; fill: none; }
+
+  /* c-purple */
+  svg .c-purple rect, svg .c-purple circle { fill: var(--purple-lite); stroke: var(--purple-mid); }
+  svg .c-purple .th { fill: #3C3489; }
+  svg .c-purple .ts { fill: #534AB7; }
+
+  /* c-teal */
+  svg .c-teal rect, svg .c-teal circle { fill: var(--teal-lite); stroke: var(--teal-mid); }
+  svg .c-teal .th { fill: #085041; }
+  svg .c-teal .ts { fill: #0F6E56; }
+
+  /* c-amber */
+  svg .c-amber rect, svg .c-amber circle { fill: var(--amber-lite); stroke: #EF9F27; }
+  svg .c-amber .th { fill: #633806; }
+  svg .c-amber .ts { fill: #854F0B; }
+
+  /* c-gray */
+  svg .c-gray rect, svg .c-gray circle { fill: var(--gray-bg); stroke: var(--gray3); }
+  svg .c-gray .th { fill: var(--gray1); }
+  svg .c-gray .ts { fill: var(--gray2); }
+
+  @media (prefers-color-scheme: dark) {
+    svg .c-purple rect, svg .c-purple circle { fill: #26215C; stroke: #534AB7; }
+    svg .c-purple .th { fill: #EEEDFE; }
+    svg .c-purple .ts { fill: #AFA9EC; }
+    svg .c-teal rect, svg .c-teal circle { fill: #04342C; stroke: #0F6E56; }
+    svg .c-teal .th { fill: #E1F5EE; }
+    svg .c-teal .ts { fill: #5DCAA5; }
+    svg .c-amber rect, svg .c-amber circle { fill: #412402; stroke: #BA7517; }
+    svg .c-amber .th { fill: #FAEEDA; }
+    svg .c-amber .ts { fill: #FAC775; }
+    svg .c-gray rect, svg .c-gray circle { fill: #2C2C2A; stroke: #5F5E5A; }
+    svg .c-gray .th { fill: #E8E6DF; }
+    svg .c-gray .ts { fill: #B4B2A9; }
+  }
+
+  /* ── Detail card ── */
+  .detail-card {
+    background: var(--card-bg);
+    border: 0.5px solid var(--border);
+    border-left: 3px solid var(--purple);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    margin-top: 14px;
+    display: none;
+    animation: fadeIn .15s ease;
+  }
+  .detail-card.show { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  .dc-tag {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    color: var(--purple);
+  }
+  .dc-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 7px;
+  }
+  .dc-body {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+
+  /* ── Gap legend ── */
+  .gap-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .gl-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-secondary);
+  }
+  .gl-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── Footer ── */
+  .site-footer {
+    border-top: 0.5px solid var(--border);
+    padding: 16px 32px;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    text-align: center;
+  }
+
+  .dl-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: inherit;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 0.5px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all .15s;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .dl-btn:hover {
+    background: var(--purple);
+    color: var(--purple-lite);
+    border-color: var(--purple);
+  }
+  .dl-btn:hover svg path { stroke: var(--purple-lite); }
+
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-left">
+    <div class="eyebrow">NYC DOE · Office of Student Pathways · CTE Program Quality</div>
+    <h1>Self-Study &amp; External Review — Process Map</h1>
+  </div>
+  <div class="header-right">
+    For Program Pathway Coaches<br>
+    Click any element to learn more
+  </div>
+  <button onclick="downloadGuide()" class="dl-btn" title="Download the full reference guide as a Word document">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0"><path d="M7 1v8M4 6l3 3 3-3M2 11h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Reference Guide (.docx)
+    </button>
+</header>
+
+<div class="container">
+
+  <div class="view-nav">
+    <button class="vnav-btn active" onclick="showView('two-tracks', this)">Two processes</button>
+    <button class="vnav-btn" onclick="showView('lifecycle', this)">5-year lifecycle</button>
+    <button class="vnav-btn" onclick="showView('gaps', this)">Where the gaps are</button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- VIEW 1: TWO TRACKS                              -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="view-panel active" id="view-two-tracks">
+    <div class="panel-label">Two distinct processes — one shared goal</div>
+    <div class="svg-wrap">
+    <svg viewBox="0 0 680 520" role="img">
+      <title>Two CTE quality assurance processes: Self-Study (annual) and External Review (every 5 years)</title>
+      <desc>Side-by-side diagram showing the Self-Study Process (school-led, annual) and External Review Process (consultant-led, every 5 years) with a shared quality goal.</desc>
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+
+      <!-- Shared goal -->
+      <g class="node c-purple" onclick="detail('goal')">
+        <rect x="140" y="20" width="400" height="48" rx="8" stroke-width="0.5"/>
+        <text class="th" x="340" y="39" text-anchor="middle" dominant-baseline="central">CTE program quality</text>
+        <text class="ts" x="340" y="57" text-anchor="middle" dominant-baseline="central">Shared goal of both processes</text>
+      </g>
+      <line x1="220" y1="68" x2="185" y2="102" stroke="#AFA9EC" stroke-width="1" marker-end="url(#arr)"/>
+      <line x1="460" y1="68" x2="495" y2="102" stroke="#5DCAA5" stroke-width="1" marker-end="url(#arr)"/>
+
+      <!-- LEFT: Self-Study label -->
+      <rect x="40" y="102" width="290" height="34" rx="6" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="0.5"/>
+      <text class="th" x="185" y="115" text-anchor="middle" dominant-baseline="central" fill="#3C3489">Self-Study Process</text>
+      <text class="ts" x="185" y="130" text-anchor="middle" dominant-baseline="central" fill="#534AB7">Annual · School-led · PPC-supported</text>
+
+      <!-- SS Steps -->
+      <g class="node c-purple" onclick="detail('cpp')">
+        <rect x="55" y="154" width="260" height="52" rx="8" stroke-width="0.5"/>
+        <text class="th" x="185" y="174" text-anchor="middle" dominant-baseline="central">Career Pathway Portal</text>
+        <text class="ts" x="185" y="192" text-anchor="middle" dominant-baseline="central">Contacts · SCED codes · Skills · Articulation</text>
+      </g>
+      <line x1="185" y1="206" x2="185" y2="224" stroke="#AFA9EC" stroke-width="1" marker-end="url(#arr)"/>
+
+      <g class="node c-purple" onclick="detail('committee')">
+        <rect x="55" y="224" width="260" height="52" rx="8" stroke-width="0.5"/>
+        <text class="th" x="185" y="244" text-anchor="middle" dominant-baseline="central">Self-Study Committee</text>
+        <text class="ts" x="185" y="262" text-anchor="middle" dominant-baseline="central">Staff · Industry · Postsecondary · Students</text>
+      </g>
+      <line x1="185" y1="276" x2="185" y2="294" stroke="#AFA9EC" stroke-width="1" marker-end="url(#arr)"/>
+
+      <g class="node c-purple" onclick="detail('selfeval')">
+        <rect x="55" y="294" width="260" height="52" rx="8" stroke-width="0.5"/>
+        <text class="th" x="185" y="314" text-anchor="middle" dominant-baseline="central">Annual Self-Evaluation</text>
+        <text class="ts" x="185" y="332" text-anchor="middle" dominant-baseline="central">Due late May – mid June · 5 QI ratings</text>
+      </g>
+      <line x1="185" y1="346" x2="185" y2="364" stroke="#AFA9EC" stroke-width="1" marker-end="url(#arr)"/>
+
+      <g class="node c-purple" onclick="detail('currdocs')">
+        <rect x="55" y="364" width="260" height="52" rx="8" stroke-width="0.5"/>
+        <text class="th" x="185" y="384" text-anchor="middle" dominant-baseline="central">Curriculum documents</text>
+        <text class="ts" x="185" y="402" text-anchor="middle" dominant-baseline="central">Crosswalk · Syllabi · WBL · EP review</text>
+      </g>
+      <line x1="185" y1="416" x2="185" y2="434" stroke="#AFA9EC" stroke-width="1" marker-end="url(#arr)"/>
+
+      <g class="node c-gray" onclick="detail('ssout')">
+        <rect x="70" y="434" width="230" height="44" rx="8" stroke-width="0.5"/>
+        <text class="th" x="185" y="451" text-anchor="middle" dominant-baseline="central">Output</text>
+        <text class="ts" x="185" y="468" text-anchor="middle" dominant-baseline="central">Updated CPP · Case notes · Action items</text>
+      </g>
+
+      <rect x="55" y="486" width="260" height="24" rx="12" fill="none" stroke="#AFA9EC" stroke-width="0.5" stroke-dasharray="4 3"/>
+      <text class="ts" x="185" y="498" text-anchor="middle" dominant-baseline="central" fill="#534AB7">PPC role: active coach + document reviewer</text>
+
+      <!-- RIGHT: External Review label -->
+      <rect x="350" y="102" width="290" height="34" rx="6" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
+      <text class="th" x="495" y="115" text-anchor="middle" dominant-baseline="central" fill="#085041">External Review Process</text>
+      <text class="ts" x="495" y="130" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Every 5 years · Consultant-led</text>
+
+      <g class="node c-teal" onclick="detail('readiness')">
+        <rect x="365" y="154" width="260" height="52" rx="8" stroke-width="0.5"/>
+        <text class="th" x="495" y="174" text-anchor="middle" dominant-baseline="central">Readiness prerequisites</text>
+        <text class="ts" x="495" y="192" text-anchor="middle" dominant-baseline="central">Checklist complete · PPC review done</text>
+      </g>
+      <line x1="495" y1="206" x2="495" y2="224" stroke="#5DCAA5" stroke-width="1" marker-end="url(#arr)"/>
+
+      <g class="node c-teal" onclick="detail('ercommittee')">
+        <rect x="365" y="224" width="260" height="52" rx="8" stroke-width="0.5"/>
+        <text class="th" x="495" y="244" text-anchor="middle" dominant-baseline="central">External Review Committee</text>
+        <text class="ts" x="495" y="262" text-anchor="middle" dominant-baseline="central">2 new industry · 1 new postsecondary</text>
+      </g>
+      <line x1="495" y1="276" x2="495" y2="294" stroke="#5DCAA5" stroke-width="1" marker-end="url(#arr)"/>
+
+      <g class="node c-teal" onclick="detail('standards')">
+        <rect x="365" y="294" width="260" height="52" rx="8" stroke-width="0.5"/>
+        <text class="th" x="495" y="314" text-anchor="middle" dominant-baseline="central">Standards alignment review</text>
+        <text class="ts" x="495" y="332" text-anchor="middle" dominant-baseline="central">CDOS · NextGen · CCTC · CFM depth check</text>
+      </g>
+      <line x1="495" y1="346" x2="495" y2="364" stroke="#5DCAA5" stroke-width="1" marker-end="url(#arr)"/>
+
+      <g class="node c-teal" onclick="detail('interviews')">
+        <rect x="365" y="364" width="260" height="52" rx="8" stroke-width="0.5"/>
+        <text class="th" x="495" y="384" text-anchor="middle" dominant-baseline="central">Stakeholder interviews</text>
+        <text class="ts" x="495" y="402" text-anchor="middle" dominant-baseline="central">Teachers · Partners · Students · Leadership</text>
+      </g>
+      <line x1="495" y1="416" x2="495" y2="434" stroke="#5DCAA5" stroke-width="1" marker-end="url(#arr)"/>
+
+      <g class="node c-gray" onclick="detail('erout')">
+        <rect x="380" y="434" width="230" height="44" rx="8" stroke-width="0.5"/>
+        <text class="th" x="495" y="451" text-anchor="middle" dominant-baseline="central">Output</text>
+        <text class="ts" x="495" y="468" text-anchor="middle" dominant-baseline="central">Review report · NYSED app forwarded or held</text>
+      </g>
+
+      <rect x="365" y="486" width="260" height="24" rx="12" fill="none" stroke="#5DCAA5" stroke-width="0.5" stroke-dasharray="4 3"/>
+      <text class="ts" x="495" y="498" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Consultant role: evaluator + standards expert</text>
+
+      <!-- Cross-track connector -->
+      <path d="M315 442 Q340 442 340 412 Q340 382 365 382" fill="none" stroke="#D3D1C7" stroke-width="1" stroke-dasharray="5 4" marker-end="url(#arr)"/>
+      <text class="ts" x="340" y="410" text-anchor="middle" fill="#888780">informs</text>
+    </svg>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- VIEW 2: LIFECYCLE                               -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="view-panel" id="view-lifecycle">
+    <div class="panel-label">The 5-year approval cycle — click any year</div>
+    <div class="svg-wrap">
+    <svg viewBox="0 0 680 430" role="img">
+      <title>5-year CTE program approval lifecycle</title>
+      <desc>Timeline showing Years 1 through 5, self-study activities each year, and external review in Year 5.</desc>
+      <defs>
+        <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+
+      <line x1="60" y1="100" x2="630" y2="100" stroke="#D3D1C7" stroke-width="1.5" marker-end="url(#arr2)"/>
+
+      <g class="node c-purple" onclick="detail('y1')"><circle cx="105" cy="100" r="22" stroke-width="0.5"/><text class="th" x="105" y="100" text-anchor="middle" dominant-baseline="central">Y1</text></g>
+      <g class="node c-purple" onclick="detail('y2')"><circle cx="225" cy="100" r="22" stroke-width="0.5"/><text class="th" x="225" y="100" text-anchor="middle" dominant-baseline="central">Y2</text></g>
+      <g class="node c-purple" onclick="detail('y3')"><circle cx="345" cy="100" r="22" stroke-width="0.5"/><text class="th" x="345" y="100" text-anchor="middle" dominant-baseline="central">Y3</text></g>
+      <g class="node c-amber" onclick="detail('y4')"><circle cx="465" cy="100" r="22" stroke-width="0.5"/><text class="th" x="465" y="100" text-anchor="middle" dominant-baseline="central">Y4</text></g>
+      <g class="node c-teal"  onclick="detail('y5')"><circle cx="585" cy="100" r="22" stroke-width="0.5"/><text class="th" x="585" y="100" text-anchor="middle" dominant-baseline="central">Y5</text></g>
+
+      <text class="ts" x="105" y="66" text-anchor="middle" fill="#534AB7">Baseline</text>
+      <text class="ts" x="225" y="66" text-anchor="middle" fill="#534AB7">Pulse check</text>
+      <text class="ts" x="345" y="66" text-anchor="middle" fill="#534AB7">Curriculum audit</text>
+      <text class="ts" x="465" y="66" text-anchor="middle" fill="#BA7517">Pre-flight</text>
+      <text class="ts" x="585" y="66" text-anchor="middle" fill="#0F6E56">Reapproval</text>
+
+      <rect x="83" y="132" width="502" height="28" rx="4" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="0.5"/>
+      <text class="ts" x="334" y="146" text-anchor="middle" dominant-baseline="central" fill="#534AB7">Self-Study Process — every year</text>
+
+      <rect x="563" y="168" width="44" height="28" rx="4" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
+      <text class="ts" x="585" y="182" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">ER</text>
+      <text class="ts" x="558" y="182" text-anchor="end" fill="#888780">External Review</text>
+      <line x1="460" y1="182" x2="561" y2="182" stroke="#D3D1C7" stroke-width="0.5" stroke-dasharray="3 3"/>
+
+      <!-- Activity boxes -->
+      <g class="node c-gray" onclick="detail('y1')">
+        <rect x="44" y="216" width="122" height="72" rx="6" stroke-width="0.5"/>
+        <text class="ts" x="105" y="238" text-anchor="middle" dominant-baseline="central">CPP baseline</text>
+        <text class="ts" x="105" y="256" text-anchor="middle" dominant-baseline="central">Committee setup</text>
+        <text class="ts" x="105" y="274" text-anchor="middle" dominant-baseline="central">First self-eval</text>
+      </g>
+      <g class="node c-gray" onclick="detail('y2')">
+        <rect x="164" y="216" width="122" height="72" rx="6" stroke-width="0.5"/>
+        <text class="ts" x="225" y="238" text-anchor="middle" dominant-baseline="central">CPP verify</text>
+        <text class="ts" x="225" y="256" text-anchor="middle" dominant-baseline="central">Partner feedback</text>
+        <text class="ts" x="225" y="274" text-anchor="middle" dominant-baseline="central">Self-eval debrief</text>
+      </g>
+      <g class="node c-gray" onclick="detail('y3')">
+        <rect x="284" y="216" width="122" height="72" rx="6" stroke-width="0.5"/>
+        <text class="ts" x="345" y="238" text-anchor="middle" dominant-baseline="central">Crosswalk audit</text>
+        <text class="ts" x="345" y="256" text-anchor="middle" dominant-baseline="central">Partner rotation</text>
+        <text class="ts" x="345" y="274" text-anchor="middle" dominant-baseline="central">Drift check</text>
+      </g>
+      <g class="node c-amber" onclick="detail('y4')">
+        <rect x="404" y="216" width="122" height="72" rx="6" stroke-width="0.5"/>
+        <text class="ts" x="465" y="238" text-anchor="middle" dominant-baseline="central">Standards review</text>
+        <text class="ts" x="465" y="256" text-anchor="middle" dominant-baseline="central">Consultant lens</text>
+        <text class="ts" x="465" y="274" text-anchor="middle" dominant-baseline="central">Gap closure</text>
+      </g>
+      <g class="node c-teal" onclick="detail('y5')">
+        <rect x="524" y="216" width="122" height="72" rx="6" stroke-width="0.5"/>
+        <text class="ts" x="585" y="234" text-anchor="middle" dominant-baseline="central">SSR regenerate</text>
+        <text class="ts" x="585" y="252" text-anchor="middle" dominant-baseline="central">New partners</text>
+        <text class="ts" x="585" y="270" text-anchor="middle" dominant-baseline="central">External review</text>
+        <text class="ts" x="585" y="278" text-anchor="middle" dominant-baseline="central">NYSED submit</text>
+      </g>
+
+      <rect x="395" y="298" width="140" height="30" rx="6" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/>
+      <text class="ts" x="465" y="313" text-anchor="middle" dominant-baseline="central" fill="#633806">Highest-leverage PPC action</text>
+
+      <rect x="524" y="298" width="122" height="30" rx="6" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
+      <text class="ts" x="585" y="313" text-anchor="middle" dominant-baseline="central" fill="#085041">Perkins gate</text>
+
+      <path d="M585 358 Q622 378 642 358 Q660 340 622 322 Q562 300 522 322" fill="none" stroke="#D3D1C7" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#arr2)"/>
+      <text class="ts" x="642" y="376" text-anchor="middle" fill="#888780">cycle resets</text>
+
+      <!-- Legend -->
+      <rect x="40" y="392" width="14" height="14" rx="2" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="0.5"/>
+      <text class="ts" x="60" y="399" dominant-baseline="central" fill="#534AB7">Self-Study (annual)</text>
+      <rect x="200" y="392" width="14" height="14" rx="2" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
+      <text class="ts" x="220" y="399" dominant-baseline="central" fill="#0F6E56">External Review (Year 5)</text>
+      <rect x="390" y="392" width="14" height="14" rx="2" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/>
+      <text class="ts" x="410" y="399" dominant-baseline="central" fill="#633806">Critical intervention</text>
+    </svg>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- VIEW 3: GAPS                                    -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="view-panel" id="view-gaps">
+    <div class="panel-label">Four gaps — where they live in the process</div>
+    <div class="svg-wrap">
+    <svg viewBox="0 0 680 500" role="img">
+      <title>Four quality gaps mapped to the CTE process</title>
+      <desc>Diagram showing four gaps in current practice and where they occur across the annual self-study cycle and external review.</desc>
+      <defs>
+        <marker id="arr3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+
+      <!-- Header bars -->
+      <rect x="30" y="30" width="440" height="54" rx="10" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="0.5"/>
+      <text class="th" x="250" y="52" text-anchor="middle" dominant-baseline="central" fill="#3C3489">Annual Self-Study Cycle</text>
+      <text class="ts" x="250" y="70" text-anchor="middle" dominant-baseline="central" fill="#534AB7">PPC + School · Every year · All approved programs</text>
+
+      <rect x="500" y="30" width="155" height="54" rx="10" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
+      <text class="th" x="577" y="52" text-anchor="middle" dominant-baseline="central" fill="#085041">External Review</text>
+      <text class="ts" x="577" y="70" text-anchor="middle" dominant-baseline="central" fill="#0F6E56">Year 5 · Consultants</text>
+
+      <line x1="470" y1="57" x2="498" y2="57" stroke="#D3D1C7" stroke-width="1" marker-end="url(#arr3)"/>
+
+      <!-- Gap 1 -->
+      <g class="node" onclick="detail('gap1')">
+        <rect x="30" y="122" width="200" height="80" rx="8" fill="#FAECE7" stroke="#D85A30" stroke-width="1"/>
+        <text class="th" x="130" y="150" text-anchor="middle" dominant-baseline="central" fill="#4A1B0C">Gap 1</text>
+        <text class="ts" x="130" y="168" text-anchor="middle" dominant-baseline="central" fill="#712B13">Curriculum drift</text>
+        <text class="ts" x="130" y="185" text-anchor="middle" dominant-baseline="central" fill="#993C1D">Crosswalks not revisited</text>
+      </g>
+      <line x1="130" y1="122" x2="130" y2="86" stroke="#D85A30" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#arr3)"/>
+
+      <!-- Gap 3 -->
+      <g class="node" onclick="detail('gap3')">
+        <rect x="250" y="122" width="200" height="80" rx="8" fill="#FAECE7" stroke="#D85A30" stroke-width="1"/>
+        <text class="th" x="350" y="150" text-anchor="middle" dominant-baseline="central" fill="#4A1B0C">Gap 3</text>
+        <text class="ts" x="350" y="168" text-anchor="middle" dominant-baseline="central" fill="#712B13">Committee vitality</text>
+        <text class="ts" x="350" y="185" text-anchor="middle" dominant-baseline="central" fill="#993C1D">Nominal partner engagement</text>
+      </g>
+      <line x1="350" y1="122" x2="350" y2="86" stroke="#D85A30" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#arr3)"/>
+
+      <!-- Gap 4 -->
+      <rect x="60" y="202" width="140" height="38" rx="6" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="0.5"/>
+      <text class="ts" x="130" y="221" text-anchor="middle" dominant-baseline="central" fill="#534AB7">Annual Self-Evaluation</text>
+
+      <g class="node" onclick="detail('gap4')">
+        <rect x="30" y="242" width="200" height="80" rx="8" fill="#FAECE7" stroke="#D85A30" stroke-width="1"/>
+        <text class="th" x="130" y="270" text-anchor="middle" dominant-baseline="central" fill="#4A1B0C">Gap 4</text>
+        <text class="ts" x="130" y="288" text-anchor="middle" dominant-baseline="central" fill="#712B13">Self-eval as checkbox</text>
+        <text class="ts" x="130" y="305" text-anchor="middle" dominant-baseline="central" fill="#993C1D">Ratings not interrogated</text>
+      </g>
+      <line x1="130" y1="242" x2="130" y2="202" stroke="#D85A30" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#arr3)"/>
+
+      <!-- Gap 2 -->
+      <rect x="370" y="182" width="100" height="38" rx="6" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="0.5"/>
+      <text class="ts" x="420" y="201" text-anchor="middle" dominant-baseline="central" fill="#534AB7">Curriculum docs</text>
+
+      <g class="node" onclick="detail('gap2')">
+        <rect x="480" y="162" width="175" height="90" rx="8" fill="#FAECE7" stroke="#D85A30" stroke-width="1"/>
+        <text class="th" x="567" y="192" text-anchor="middle" dominant-baseline="central" fill="#4A1B0C">Gap 2</text>
+        <text class="ts" x="567" y="210" text-anchor="middle" dominant-baseline="central" fill="#712B13">Standards depth</text>
+        <text class="ts" x="567" y="227" text-anchor="middle" dominant-baseline="central" fill="#993C1D">PPC review shallower</text>
+        <text class="ts" x="567" y="240" text-anchor="middle" dominant-baseline="central" fill="#993C1D">than consultant review</text>
+      </g>
+      <line x1="500" y1="201" x2="470" y2="201" stroke="#D85A30" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#arr3)"/>
+
+      <!-- Strategy bar -->
+      <rect x="30" y="360" width="620" height="36" rx="6" fill="#EAF3DE" stroke="#97C459" stroke-width="0.5"/>
+      <text class="ts" x="340" y="378" text-anchor="middle" dominant-baseline="central" fill="#27500A">Strategies: Process fixes · Coaching posture shifts · Policy conversations with PAQ team</text>
+
+      <line x1="130" y1="324" x2="130" y2="358" stroke="#97C459" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#arr3)"/>
+      <line x1="350" y1="202" x2="350" y2="358" stroke="#97C459" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#arr3)"/>
+      <line x1="567" y1="254" x2="567" y2="358" stroke="#97C459" stroke-width="1" stroke-dasharray="3 3" marker-end="url(#arr3)"/>
+
+      <!-- Year 4 callout -->
+      <rect x="250" y="410" width="200" height="46" rx="8" fill="#FAEEDA" stroke="#EF9F27" stroke-width="0.5"/>
+      <text class="th" x="350" y="426" text-anchor="middle" dominant-baseline="central" fill="#633806">Year 4 intervention</text>
+      <text class="ts" x="350" y="444" text-anchor="middle" dominant-baseline="central" fill="#854F0B">Bridges Gaps 1 + 2 before Year 5</text>
+      <line x1="350" y1="396" x2="350" y2="408" stroke="#EF9F27" stroke-width="1" marker-end="url(#arr3)"/>
+    </svg>
+    </div>
+
+    <div class="gap-legend">
+      <div class="gl-item"><div class="gl-dot" style="background:#D85A30"></div>Gap in current practice</div>
+      <div class="gl-item"><div class="gl-dot" style="background:#534AB7"></div>Self-Study element</div>
+      <div class="gl-item"><div class="gl-dot" style="background:#0F6E56"></div>External Review element</div>
+      <div class="gl-item"><div class="gl-dot" style="background:#639922"></div>Strategy layer</div>
+      <div class="gl-item"><div class="gl-dot" style="background:#BA7517"></div>Critical intervention</div>
+    </div>
+  </div>
+
+  <!-- Detail card -->
+  <div class="detail-card" id="detail-card">
+    <div class="dc-tag" id="dc-tag"></div>
+    <div class="dc-title" id="dc-title"></div>
+    <div class="dc-body" id="dc-body"></div>
+  </div>
+
+</div><!-- /container -->
+
+<footer class="site-footer">
+  NYC Department of Education · Office of Student Pathways · CTE Program Quality · For Program Pathway Coaches
+</footer>
+
+<script>
+const details = {
+  goal:        { tag:"Shared purpose", color:"#534AB7", title:"CTE program quality", body:"Both processes serve the same goal: ensuring that CTE programs deliver rigorous, current, industry-connected instruction to students. They are not redundant — they are complementary. The Self-Study maintains quality over time; the External Review validates readiness at a defined moment." },
+  cpp:         { tag:"Self-Study · CPP", color:"#534AB7", title:"Career Pathway Portal accuracy", body:"The CPP is the authoritative source for all CTE program data. PPCs verify five tabs annually: Contacts, Technical Assessment, Course Sequence (SCED codes + teacher certifications), Articulation Agreements, and Technical Skills (minimum 15, maximum 20 mastery-level skills)." },
+  committee:   { tag:"Self-Study · Committee", color:"#534AB7", title:"Self-Study Committee", body:"Must include: CTE teachers, WBL Coordinator, school administration, industry partner(s), postsecondary partner(s), and student voice. Partner participation must be substantive — documented contributions, not just signatures. A committee where the same partners appear with no documented input is not functioning as designed." },
+  selfeval:    { tag:"Self-Study · Evaluation", color:"#534AB7", title:"Annual Self-Evaluation", body:"The school's honest assessment of its program across 5 Quality Indicators (Curriculum & Instruction, Assessment, WBL, Partnerships, Advising). Due late May or mid-June. PPCs should treat it as the starting point for a debrief conversation — not just a document to receive. Ratings should be cross-referenced against CPP data." },
+  currdocs:    { tag:"Self-Study · Documents", color:"#534AB7", title:"Curriculum documents review", body:"PPCs request supporting docs annually: curriculum crosswalks, course syllabi, WBL documentation, and the Employability Profile. The risk is that teachers often don't revisit crosswalks after approval, creating silent drift. A mid-cycle audit at Year 3 is the proactive check." },
+  ssout:       { tag:"Self-Study · Output", color:"#534AB7", title:"Annual cycle output", body:"Updated CPP data, a completed Annual Self-Evaluation, documented coaching case notes, and action items the school has committed to address. These outputs build the evidence base that should make the Year 5 external review a confirmation, not a discovery." },
+  readiness:   { tag:"External Review · Gate", color:"#0F6E56", title:"Readiness prerequisites", body:"Before an external review can be scheduled: all CTE Checklist documents must be complete, PPC review documented, and NYSED Application Parts I and II submitted. No exceptions. These requirements exist so the external review focuses on quality evaluation, not document chase." },
+  ercommittee: { tag:"External Review · Committee", color:"#0F6E56", title:"External Review Committee", body:"Requires 2 new industry partners and 1 new postsecondary partner — specifically NOT the same individuals from the self-study committee. This prevents echo-chamber validation. Schools should begin building their partner bench at Year 1–2, not scramble for new partners in Year 5." },
+  standards:   { tag:"External Review · Standards", color:"#0F6E56", title:"Standards alignment review", body:"Consultants evaluate CDOS, NYS Next Generation, CCTC, and CFM alignment — not just for presence of citations, but for the credibility and depth of instructional connections. A crosswalk that lists standards without demonstrating how they are taught will not satisfy an experienced reviewer." },
+  interviews:  { tag:"External Review · Interviews", color:"#0F6E56", title:"Stakeholder interviews", body:"Consultants verify that the school's self-reported quality matches what stakeholders actually describe. Schools that arrive with genuine quality — built through rigorous annual self-study cycles — have nothing to fear from interviews." },
+  erout:       { tag:"External Review · Output", color:"#0F6E56", title:"External Review output", body:"A formal committee report is generated. The NYSED application is either forwarded or held pending gap resolution. A held application delays NYSED approval, which is also the gate to Perkins V funding eligibility." },
+  y1:          { tag:"Year 1 — Baseline capture", color:"#534AB7", title:"Post-approval baseline establishment", body:"Confirm CPP accuracy across all tabs. Establish the self-study committee with documented partner contributions. Timestamp the curriculum crosswalk. Complete the first annual self-evaluation debrief. This year sets the quality baseline that all future years measure against." },
+  y2:          { tag:"Year 2 — Pulse check", color:"#534AB7", title:"Mid-cycle verification", body:"Have any SCED codes, teacher certifications, or course content changed since approval? Is industry partner feedback documented and connected to curriculum? Cross-reference the annual self-evaluation against CPP data. Identify any drift before it compounds." },
+  y3:          { tag:"Year 3 — Curriculum audit", color:"#534AB7", title:"Proactive crosswalk audit", body:"Conduct a structured review of the curriculum crosswalk against current standards — treating this as a proactive check, not a reactive response. Begin building new partner relationships if rotation is warranted. Gaps identified now have two full years to close before the external review." },
+  y4:          { tag:"Year 4 — Pre-flight diagnostic", color:"#BA7517", title:"The highest-leverage PPC action in the cycle", body:"Review the curriculum crosswalk and supporting documents through the lens of what external review consultants will evaluate. Ask: Are CDOS, NextGen, CCTC, and CFM standards credibly connected to instruction — not just cited? Schools that enter Year 5 having already addressed standards alignment gaps are dramatically more likely to clear the external review without holds." },
+  y5:          { tag:"Year 5 — Reapproval", color:"#0F6E56", title:"SSR assembly and external review", body:"Regenerate the Self-Study Report from current CPP data. Treat the Annual Self-Evaluation as external review preparation. Recruit the required new industry and postsecondary partners. Schedule and complete the external review. Forward the NYSED application. Cycle resets upon approval." },
+  gap1:        { tag:"Gap 1 — Curriculum drift", color:"#993C1D", title:"Crosswalks not revisited after approval", body:"Once approved, teachers often don't update curriculum crosswalks. PPCs request docs annually — but passive receipt isn't enough. Strategies: mid-cycle crosswalk audit at Year 3; reframe document request as a curriculum conversation with specific questions; connect partner feedback to visible curriculum updates." },
+  gap2:        { tag:"Gap 2 — Standards depth", color:"#993C1D", title:"PPC review is shallower than consultant review", body:"Consultants evaluate whether standards connections are instructionally credible, not just present. Annual PPC review rarely reaches this depth — programs can look compliant for 4 years then fail at Year 5. Strategies: Year 4 standards review through the consultant lens; co-develop a crosswalk quality rubric with PAQ consultants; build PPC standards literacy through internal PD." },
+  gap3:        { tag:"Gap 3 — Committee vitality", color:"#993C1D", title:"Same partners, nominal participation", body:"Self-study committees often feature the same partners year after year with no documented contributions. Strategies: require documented partner contribution (not just presence); encourage rotation every 2–3 years; help schools show the feedback loop from partner input to curriculum action." },
+  gap4:        { tag:"Gap 4 — Self-eval as checkbox", color:"#993C1D", title:"Ratings not interrogated against evidence", body:"Schools rate themselves high without evidence; PPCs accept submissions without probing. Strategies: conduct a post-self-eval debrief with every school; cross-reference QI ratings against CPP data (a 'Substantially Achieved' on Technical Skills with only 9 skills in CPP is a contradiction); use Year 5 self-eval as explicit external review preparation." },
+};
+
+function showView(id, btn) {
+  document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.vnav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + id).classList.add('active');
+  btn.classList.add('active');
+  document.getElementById('detail-card').classList.remove('show');
+}
+
+function detail(key) {
+  const d = details[key];
+  if (!d) return;
+  const card = document.getElementById('detail-card');
+  const tag  = document.getElementById('dc-tag');
+  tag.textContent = d.tag;
+  tag.style.color = d.color;
+  document.getElementById('dc-title').textContent = d.title;
+  document.getElementById('dc-body').textContent  = d.body;
+  card.style.borderColor     = d.color + '40';
+  card.style.borderLeftColor = d.color;
+  card.classList.add('show');
+  card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+  const DOCX_B64 = "UEsDBAoAAAAAAPtpmlwAAAAAAAAAAAAAAAAFAAAAd29yZC9QSwMECgAAAAAA+2maXAAAAAAAAAAAAAAAAAsAAAB3b3JkL19yZWxzL1BLAwQKAAAACAD7aZpcWMsNbw8BAAAhBQAAHAAAAHdvcmQvX3JlbHMvZG9jdW1lbnQueG1sLnJlbHOtlM1OwzAQhF8l8p04KVAKqtsLQuoVhQdw7c2PiH9kbxF9e4zStC6qLA4+ztie+bRaeb39VmPxBc4PRjNSlxUpQAsjB90x8tG83a3IdrN+h5FjuOH7wfoiPNGekR7RvlDqRQ+K+9JY0OGkNU5xDNJ11HLxyTugi6paUhdnkOvMYicZcTtZk6I5WvhPtmnbQcCrEQcFGm9UUI/HEXxI5K4DZGTSZcgh9Hb9Ime9Pqg9uDDHC8HZSkHc54RojUFtMB7D2UpBPOSEAC3/MMxOCuEx6y4AYph7vA0nJ4WwzIkgjPo9ihBmJ4XwlBOhBy7BXQAmXaf6V7m3Me6fdLL/OW+/xobvR4gRTtYMQa/+us0PUEsDBAoAAAAIAPtpmlyq4+8rXTQAAP5ZAgARAAAAd29yZC9kb2N1bWVudC54bWztfdly48ay7a9U9MOOdgQ1D27L23awKcrWvT1ot9ru67hxH4pAkawtTLsKEJuO83D+4LyciPN/+0tuZtYAkIQkkhpbKke4JZFAAahCVq6cVv79l69pwi6F0jLPfnq1s7n9ioksymOZjX569fvnk403r5gueRbzJM/ET6+mQr/65ee/T47iPKpSkZUsjY5OR1mu+CCB7yc7+2yyc8Amxc7+KwaDZ/poUkQ/vRqXZXG0taWjsUi53kxlpHKdD8vNKE+38uFQRmJrkqt4a3d7Z5t+K1QeCa3hTno8u+TaDZcujpYXIoMvh7lKeQl/qtFWytVFVWzA6AUv5UAmspzC2NuHbpj8p1eVyo7sEBv+hvCUI3ND9oc7Qy1zXXPKsZ0duuKWEgncQ57psSzqx1h3NPhy7Aa5vO4hLtOkXoKd/dutwbHiE/hRD7jM7cfmpDQxd379iDvbS6wIDuHPWOYWZq/p7iTlMqsvvNbUNCZ352C1AXbnByhGt1ucX1VeFfVo8najnWYXfiyU+RXGsovcfDR9u5s5H/PCS2D0dbnB7HuH4+1vRWOuSvG1HmNn5UEOtn7YerM40O4aA8ED7u4sDrW38lCHW3hXCwMt+S7PDQR3tTDSki/1/EgtD3e43ki7iyN9v95Ie4sjvVlvpIXXCTaSizWGkrWM8XQvXnmE77fSPBbJXr0Z7hxGYknxcLL2xgrrVlQ/D44jl7wfN86hH0c272e9m2kMoOMyHq80yq7bm7fwXF7yMdfj5oirbWcgr264aQpzhMBnkMdT/FnQP2cKf+iCR7AwbHLEh6UAnLD/BoAUHCtAFcElt19t/fz3LX+4+cf+fpJnpcYzdSRh4+4qyRM8N9KNPwTXZVdL3vho3M20P36L7uIv+PiSJz+92t11n/T07Gdb/sIlzgrdOdxgoYQW6lK8+pnhIaU50NzzjQ/7GM86MP/2NP2U7iGHPNHCHCHrR298GvHCnBLlSa7cAQcnB/2D7sIsbrfM4vZSs/jhzx477p91P31+3//wmX08Yf3j33vdz6cfP6w+v/vbjzHBLZM3aJ3SFSb/Xuf8I4kuy4fsvKxiNE3OAClP+FSz/2C9z312pvKR4in7R8XRGlhnIb6hF7051/v43878XB+07BIHy+0S5yIZbuA0T3FWEaqxv/G0+HH1Od15lJf7Lib1YG+/+/b7O5zU/leYkYwn7JO4lGLiZjZsGNduGIctG8bhUvPdZb08hT/HAp7lUsC0D4USGewhv1YyFgxmz+8ZdiuBMzjghpvXpHgbm0vnhbsrtGYSQZOLjwWTd9L9od/DD/RfoEXpF3OP+27F7CgLK7z7KFvRfa9w+zYVwMzjTN5ZpYpck0Itx1KzEQrFGhv87iPM6FOZw89+4liUcCWHUmiYTcFiqUuZRSVTeSJ0h8EZRQ5PQY5KiZ/wLGaFWQJt1kCwcpKzQsmUqyn7l0ExjGtdKY67VirANs2kTjWTGR1PMPRjvw39sCH8IcC6uTiiQ1s0Ot4BfnWFXtpkpyWLhY6UHMAtjvMJE7A5Muu7YXkhFC/xUSZj2FdxqCncGIylRVTip7xkI8DjbMxh9x0IkTGJuA1nKcZHiCqlEMcVikclYDszKXihcoxvJp0c8QzOZTyOYQ61iOm2pKYrZTEMxOFJ3BDwEMrv8tfs7+z12VlPf2fnUSoW8+lGmW/AD4ZzxnRVFLkq8U0HQzLPE725hmgcBivxBW6sv+ELnLNKi1U21uK8nCbCXeod7B9nXHF4eYuxuZOsSs2RMrlM3HHb/rvT2N+mvUt/wpNYq/ud83PYcmSesR3cni5hvnF7Y/klfItbGuyvM3tXvc/AnsVVvV/fLOVhne5inXYb6wRKpuQyga18oAS/iPNJ5hTiotYKC/QwC7S33AJdhR3CKj3IKu0zCoDD52yQl35/gz81YtLBlH6G1XiY1ThowGUUjoONqeCK8QJFCWQkkUMRTSOYaNQ/BjXPqKWhLIPoPNBiHdbGiDaWRotFQgsV5VmkRCmYLtHgGZGNlzuLBFc6XcM4uHFiBzgH5bTAu+cj4R5umXfiN8Exw8dOm/MywQ5R5qk75i7dVXOGDkbHHh7+L+G83WtxJu4t50z0APOIfXSo8t//+d/sM5jsZ27X7bCPmWC/5jwJfpQV/ShLOjPAvE9Q/mAl0Fni3SyDqiRVmAhMpLrJf7LJfs9ioSjxDRfBeGyGznEwEOUEvRUo2ehqwLWFnQJ2cHIpnPVI/q2LwPkHmIDz4R25FMnUuFZgi7jMJe0fQ0wQwwuRg8fp6BI9JDQDbFhlMadbT+B0dy+l9xCtscE8sxB1OUjsD3vyIPniN8j4K8cbmvz06oe9Q6vp4IC3ucJlpr+ucdTzqszdvrdvTk7EsFzl+Bv21pYzlByNV7qEzBDL/bb6KX8sf8rW7LRtzc73r0rG+OsIfvbyxEz4/uEbO+GtH2/NnFmaoSLzrx04alvHetgyWnIZZxXYMgvZesZKanKpxWw5ZWvuufQYQdlQJrXuWlwmGh3gI1duZt7zRhRqfgp3XLDdzsHC905S/BNfOYJ7viuG2PL3slWv67Wb02N4RufgQmumyAn9d5dws//uZOP88+/Hf7KzTx97/fPze4CK94zB+/3+8Ul/YVLWT+XowX3KrMor7TV816nplunZqreMe9k4Do573e7BKhtH6xk3bByt51y/cbScct3GsX1y2D84DBvHs9g4+v/nc//Th+479qn/x2n/yze8e+ycHPTvcvc4U2Kj63wqmOKRSML3ffi7okKMq/eQLY9BAhK5eUOxG/+z3lAeP+lvCcfFLaSlm2WgYhn5Hb+9zeMKT8NOy3TsLIfHyFrfSETcQUt+w1rxmFfQzwCCgFleWOeD9SB0rFcwmnasO9DvOBg5xFKjEv4XMSNvL8YczW/oHkKHgYBPptYLDEfZ4dss+gB0ltyXjEoJ+9LD7UsWW97dvtS/FFm5MeAaRCJsTt4u0lVScpiYBHekP2ADijHHiiny6FOMCK7/4c/z/jGTmSSnpI8vwTdwnP1rk32MYOPSdvs5oD3JnG53IPgKs7WcA9QPQ6txzfZkMdSW98m9qCSo4Id8mn5IN+HrOhwbC7a0OvWOuqXV6cwZu/PaZYXLXL9sx3vHO73vF6b0sXH+7vat9akd4vk4Du4c8GMsrQcPyY5tcKzdIP42devtQowtSdBSMz7Iq9LjeJwFFzskLF/KVGyyz1cnO9VjxCIFDY5ZAjhKrbN5SUlUQ7IS0hzjfJvsLSbsmOifux5aDBjJ9GmJWV6alGqMXI4EcnB0XN72FC7wr0oq0QgXlmO4MCh5BcLl4pJ4OH2Agcs7U+shfeGbTF/YPWLtghASFu5oN0Eo7Wo4fMYBfKryajRmk7GMxpTiMOdlwFMbrgSXgjALyjWAevI7+LOViIS8FPoGY8BsAGQ2dOgOzebgS0BgazDGAGZNc+MxWkygMLlrlLUQmQgOXLiCXxIaJBNfy6YBsmIim5V6tyY3vG57u48upFe8VG9aXqo3S71Uu5s7jNmyrCCPdyGP4itgIMrWEeTcMy+vEVEjQHEO7zCq2VhJwKwkJyQgRIqlYu18fqksUW9T6pGRYgl/eAGbcM1gwIw8iZghBkI6n/9J8tPBoYdDXDqj1HUHhDeuADZMmR7DTdjiMDCaSllWuG3DubArKBBwKocSKo/FwgYykeUYQQjHPMUqKuFx4+YOlMO5Jdy2eR4FOwdgi3LzCn1gtjKYLD9CkOfV5XmXsS/jnL2DqdDstAxCvbJQW0WV0AxeUcjolCsKZOPrHgltKSx6Bx33Nw5b64+aijLpBc/ZECYcxIeXKJgmFuDKEJN4RlVGUQ66DiE44XTcM1CmKOmwpPJHUzqYZ43T3BUHYsyTob8RMhlA01K+oJfggqsSxLxDY4OOB82LX3sqPhBZWUg0HtYTxb0rRHE2U7C2sJ+aJO63vEn7S71JbW8FhY5zLdezj1+8YLZOaQpqDF5TOhK5I6uklCAeqPIuBEoU6MXLXEaIZD8Z6xV1VDoQCskTQctFSRULfbTiCx6KIFZbQDRASiw9Eeq1/q6uTk9M1XQDIIWFuNeF+PL2HYhPrmB75mWuwmzfb+2PVeVxCuay8dOBtvb7FUdtHJbgXpfg1Jk6Fuzg9oNwirvSCZGN+AizMxAEZTmsFFg/Wo5IPuQy1DxhfW7DCpODwSyiHI3fhUUyJcFkulZKyahKqtQQmVh6jQL0eGGqYMI63e9WZjnwCE3R4rjaRW2+0cYDGOFHzkhRa7h5QxlRCN8/z/D92+73Bzsrhe9nz1gyfN96mTsN3590+/3jbgjfP0b43q7u/La1fvj+y3jKzozaZX/Q5v6el+tt3c9O6XnwSJijDaloCpuj/ZrC1yxS0rCCCRe6vzQpdbki0rUGjLFOOHLRTdlFlk+QoQFGMuawvgBRQz8epcvxCl9vJYYJetGd5kX3H0w2LJn4iijINIVwZA9+KOe4h+cy1B1eY6PtnQqOOQjDKpl7QjBXMuOt0nSTUtFDy0gWxo4h58sAbrUaYPSCXIvOU5nIVJaCipIRS+NDcLzcdWnI1yYEBF//vK9/D339NrrU4qTuYTJJCLPfTVgvI9obKqIf4mvuAu4gThzDZwmGtsHYV4ZoEJekB9+BADoiwLNclbAdvO6dnX23qrfxxbvTu5vXTSfrYuIxj9Zg4H7xLzvMn0siARAHL7A0XimGzQ6YzitliS3xFW+mkcjMdMUBRbBpKCr0OK+SGJs/yeGURhzmSZJjhwm6TMkHFMyuMz4GXMvger9v1zvcJ48wKYEPSD33LHpAmMBJckpB+TUcA/T1svpld0tOeQRhte5XJkU0zghBdlHbaIrD+pXDlIwhfEvLk/FUdBxrnrK1Yo5PCnQVI7bcsF73LF2V0ogZ/lURlY9bqq4TrPNe/xikKyYK5gSgMIJiEwljUXM9DRoneraIBg0rd68r10VTpjKN9Fh3BOhiRta6JlWCuy805TvNmUiNlKkgaA+1MZ4by9gt1HuZyRTsabCudw46LOVf3Z+72/CXhvmYbiTiUiTWpu44O9rFFXDZ64w4l4cXMPpqGP3tJrOl32RAXUuOEFD59ai8fSIdUJ/N9CK8VmdPazyHe+yASWYDSpYhwzRBlfQe7Cd0/Mh4439VmfBk1TbxDHNIHen9SGREum8rOhDGk2Fg8kVN7gzjAEWUMmaDLUXh2APN3C3Zy2g5OOad0yxGlZerAP3v+VVamHFkk+zVLkhqsQTfmvzdZUQ1rMfdrsfuURPnm/XousRPuVRXsbAkd7ske0fsS64uNt4SU8A72AzRex2W4YGXYf/IRaWoy3WY/wee/wOYf5h7rAWRf4Eg9PIkESNDUG19sd34UuplZONJTOBj9al58WCWEKmYQbF5lkybgUc5ZNKHN7H1UyY0QFeBnq0sEpa1xWBLPetuLpWwMbD563DtCqtMX6Uil6BjyanJImzLRPZfnmGYjM4wKYBY1IEM7Eml0bcdzMDVzMDeJjuve1k1wOaxrSoJIcnVROjjQsSkYwQAq/FBTGhHVoYgYNE6bPQVqysQ7UL4LD67QmSzTXhyAVcwLkimp0kCQLRT925LiySfWmyK8dGhTGy9k6UOt3VOPgzES39lDDKYuiKsPNbO+dJwjOa1/6VjH8y4ai7JTKUWb1j56MjNNlmXUicypqS+8DWE1sGKKRdwQXhikmycJC3L9kdm9K752kmYAdxYHFdRkZcNRnb3HKaEk644yqk0ORYl3C08SV2l3CiK9kkhZrnC3rLi3nK82QbN2esvb9995/eX4HNawxdudhe7i1jNim0EpErrEmasHbF1+BX1KSC5FlQ02LHNBWyWcNxcDDy0FnXaSBojNqpRfJ2krVOkiBZmE2KLAsNmEmRmRZnpb7Leuw9dmksA9Be473Zxu8XlCWKykpg0ced8fT+hT01ZQ667EhwwhBEwIW/KMiFiPdePlNKEZlpGv8sxwvGBjm04hl7jEn43IzvasIFa/ViPN6v+fbZGSvoyNb2GJKZ5yGWafISsu/msu302X9z9iTYtM/t2I+2txy/5ooWrUak+W45uKWcUAsCGlHkYu8n6nGgmat5hJ6Q2RBHiDPe8L6rcauy8QnscVgOQfIPLYCISsF3oiVtN9biihLOQ8nC/6/QH2mQufQikqQ7n2QTK69aoGQ0M63S/cNxmTm5UxYyDytqo8ytDEV6N3iqy6Im/D/S+JQU0TjPj2/onZuzzCC3mRMQjQxoIu2txMxIMK3qrNDH0M2y4VvH4sE6ZNdYxSrhMAS2O0DmC61QSlrBCGlboXldoxn2AqwPmZkzkliZP1uyBpUhN307vP+aaWDNDouU9r8+J3xFhHaoMPs8T7G5glsTTqJFxQyksDp7fF9d74Bt9inyje0fXMecGk2xlk+w6DuIG8R9GDJq9BFhDr5HLIjfNASZjJBmt/RIatKC4wCl3hKKm18AVtKKvQeAwCRR5O5ptBr5zCWu+QavfEdqoBjPbvdxGLHCHj0VRjo9sk+w5h47nW86zUd7kayYCVZEhWamhOZ3z8NdnAhoTNgv10lSEWjXjH82zNwevzKpemb3AY3qXIn7pu4CQ5HppdRrVS2hibclOM8zo/TJ1RYojblEUxNPVEIxQpBWsKX8RYjmnNPoOJphQStwimLBatxj5TAE1J1qYhl+R83MwpRJoJTFdIG7sRdrRI551/4FhwZRMJAGnmZpsSuoH4K21ymHDGIBxNFJ5lcX24Ufo1aC+zIWI+SgfUQo6bRa4jbhdbo6hxj1KEOXVRTlQmN61PIOkJEZGUAjmv23IipEv67NzyebV4J/IOQCCW3rh+9GReLcQnLo25W3BCOQfsJ4M07A8H5iGBJamIFpf/b3gCN/cggbC0fsRo3peb8KZDSLg09LQZIRIxGPwjE5AkUwkxR6Y44iNK9+BjNKBwooEwtFnM9ufJ3ldyugpihDyOrKeDHYy94UJCpCi5inGsGN5KWPA5A2HWsMMjty2FhbxnjM+RTvZlCEuTXSOq2gWr0BAllc6wWLkS+sSzeZWLqzXva7Xhz977Phjn/VAvSgkj0WeDHRcIdxuwOuwDA9BtozFc/Dq50twX4X5vgtG2IJnImGv88J2jsGGcqB/8myUYMs41Boii0X83eo2yDOrEwpcsIEL1t62bW+9worNnrEkF2zrZe62lesDtUYPXLCLW/qd90j/gAG+ptWA5LCnZWCEnXEMzQf5bFtUil1geRCaWHIJ5lipKVcrM3pzk53AVcZNSntymV6aPqtwWcA32MINm9eY4ESM8cS8sFFVb8f5C7hATuMr38axEJjIl0xnqynHIil8I9dBJeEj7q2Pgcgws9M0v8pN29jZtFvH/qojuAg2d8GGVzAVM1anqf6UWTOuS0HcQA17VzEURw0758LEybd0Mqva8C/ey97dZOe+RWMooFl395S+Zy1S59p0i7kNFV9TYtN2TnYs/6KW03Vfadw/TBSWqkTlKFebrNcI+9rIbPC437fH/fjjOXvdM4wQx0YhpY5e9GMUVYYsHNmswF6UQn/XbHXqY/4NwihXemwpFcP63bPz6px9wEbKv5rkfgzO+sraesdDoDJSy9XWhgW5lUAZUULxqTkP+5SwgmvTSypd2u8dGXYtUK97vc+9mx0tYYVux/maprgSZqFOMFvIrM17XsAKnLz/rt7YAkBYaWprnAomRAXKX/4lruBr8PUsdQNJDPBGJsfMSgSLpO2K0SG/pDu2mXgWKRFLS2hBWS6YEgrGWmZSijVyTPjrGsMroS7ftdi5VtixgBfD9PmjjFZPrEcNtf0OamLSZCjB33qI9zGTv+ZwUMiFWRGlv9202YndOjsRjB+bWRuE8da+DiQ4USnOpm8xgxTx2B4jz0wXOJMotpAkSs4BdC5pdkpyd3pq4plK+H5xHU9Ib5JHbS6ZSV6b4ZTYZL/yAgAkOiEkieIIk9MQ/rv4Z/Papo3OWCSOmcXVjwQJW1HCepueacUxugaxWlPHia8cRcnQ5FYgRr7zOpxzAW90MF7vHcnRvtNM3vskKH319SL1ccDV91zihyLQBvZslv4MJVlYi3tdi1aeN9LXgAA4/B53HNnTBrZ8FVQD1mhBEtbnfikCDN9GexOLkPlyz5OfILUfTDbFtDzkbe3dE69ESxfA5jzh33nJL8Q4T2KwNE5xn0HwFCy5FXfzxQCLrZ0zbCE0p07LuiqHVGCkeYHMs4VjFMGTEtZSq2tjy2gMZmIiL8mjYbudns+RXlh+EheApnaiDaNv0qTz7DQyl8k8dH1MNZ/aymJ9AefFUgmMGoXyu9VDx/us9peA3heU3KDlMgQXQeZmXFGGSok8e7M+lIhn9J7DOx1XhKRmmyWiaJq+uz5rPxVlsAXvX6nX1MiOnfFzn/XGIrpAj++Mq8rmusDiRqIIDcDuf32QG9AK0JhjY2yR+cWIDYWDXb3AT3b/MeM5F/ucX3fMwTahFaq7TxkaJUc9tsQaPYmJDNngS58RssEXFmzZbHBLh7TCis2esWQ2eOtl7jYbvN8/PgnZ4PdtA7Rmg7dzat0iG7ytCB57L4BNjqzv7LPQa+Q3PDtt2BYmtSTGJr3RWcSFygcJstXVtm4sdZRfovPUpyYMpQKoWcoU2QOGSLJl6tq4UpQSjow8izaFsd1r3zm1psAS0VTiUS6FW2QjPhKmMSQ1wpnnoDR55djMAu8f/S6sKojWw+RjTC3Rv6H/kiMc3LsFbC54s2SY0sKH5DDGUeKc+uv8Mx8YrpEBNjBp8oJQe57Fx6PLUZZnXumW61zDHbK1RAZ5YP97Hux/+0fsHPDBxmC6gT+JAIUrqQP/yRp7Wu2QKDnWcugqTWEy/xImTfdCuKxszFlCg6ycCFuGUk5yJ5JCb7LftTBpGqQ9/lXJ6II5LlxhHHfia5FwmTlmDpf5TVtS7rZAX1hNp8AJGZ0wzSvl9gS0EomLfMkGB8HICEbGYxgZO4dv7ITPfLz3Zv+6j9c1SeqrLW2StAD/G9a39YwbVrj1nDu1SOzWeGuL5M31BsnOggl21QBX2SM7u2vaI49vjjRV0Qn9d4dWyDEg4Uy3B0+36tf/ZiGoZevFCUFt+AcheEQhuAXXxgKJcZCGtaWhJkUI0vBNSsPy7O6zxn+ATEvJx8lO/6T/JsjHg7lDTg76B907hExXU6EHFbGkCJgtK4jAnYqAm7+GG2vwCM6t99i1Af53jvmOzVmOpjaDGbMKJDZ1IF4Shg56+i0IVBCoIFCLAvWH4xnyPUwojnNdJ5eA1QJWe7py9YBY7UQZnpO2KsqgXB426yQIwRNULn3q84Xwq0NaxfT9MnpExI7RLkjP+tJzRwyeQXqerPTYLnk/GupFlCIrNrpBlmBQ2lXtMgM6C+jsiYjWA6Kzd1SFFpTL+hIQ7P7nq1xsx4W2FjEmIRWzsYYwX4m8sv45CFIQpBcvSDf0ZQxwLMCxpytDDwjHqAY0v84+CXok+Mperh6xrEC+4MhU/RzZKhqYpQ6oFR6N6bc6v78qgkCtL1DBffZ8BeqsUZpmeWl+dE2rVbOVrKtTK9EYCngt4LWnK1oPiNfq/gHDPKpCznIw/5+WKDwRLWNabyQet2Ej5gi7ZesfkXfWkmKHFIEgP0F+WkvEhCjqlhtHDHsSdairDUhWh2FPFPj35H3AZQGXPV1hekBc1nNhmqBR1haC4Eh7xhoFOwlKjb1ZkXTCERBr16aOkmSCOROcZkF4rugivUz/Y9s3uY0JMsCyAMueiFA9ICz736LuchW0SzD2n5YgPBHtgg6xmJe8w7qG8ou4MWxbc5mDvW8DNThhIE1BkIIgBUG6nlPG9DzrzHfcsq22Oqy1G1SnveHNa+wHuWc647R1TAvQLkC7JyKID+lxq6l5TapA0EprC0PwvD1jrWRBHQA3Kyg/MiX1BfZYI05r32ubm1w36l+l8lGoLwgeuSBU17izbS0Bs2TvgsWiAIyH/rmrG9WD1NVd7n2ENaC6gOqersw9IKo7HbIRtqEf5lV2jRs7KJ/gZ3i5yoeKQKnWQLOq+NGR+Ue5wi6d2DiAGiVm4mtp+4UsyRQVxCqI1csVq2b7vbHAPj1ZKROjj7BRJRyYJ5chuhrA2lMWpgcEax+rMsrTkPIWHG9PSwSeiD75vUAKzxgLDjqNxrq+QVyn0V/XV5Fil7iQCBfcbkGkrk2zBjBmSkc9Ja6HbjAvEw6vRoxWD+K4gNcCXnu6kvWAeO1MqAuZaZbI7CJomPXlIDgBnq+GOc1iiV60I187ivGc3rsP3Tpaw0rFowtQMKZFZhLKSIMwBWFq7TRoRGmub4E0/W5HGDMtc+bU0rDKsI0zEyBn0mTG3Qjd8EfoPv3YQOW+uk8fHFFP84ONP7FrTNe9P+/kUFzFqnzDi/Die1Av9j0kBYfyeEUTOPJ9Y+965O1JEpEY9afZv//zv/G8KR2gqelCCc/MEj7FYqR8SKNqntb8WVzrSlEfID3VpUg32e8ZagXMiKB1GgsYS/BozIbY1n6eSztxK4+GXaGRDlVT22o8TCrf1trkq5vzCliIUiRGkfPLXMbE3b1xAEcrng6S0NV6ErpaP9Wu1rvbdsJnPm7/9PsfDrfr66zR1NoPexUMzfKs+YQ1eMNn3F5c3GWOn13cZc6YWdybT5iHnzcgycPrkeRtceSbORgJj9FFw8I9D9yUP+CJossHdFmQ4t+5rX0V3uvwXt/8Xs+8yW+73x/sLGDaW+jdf//Pf932NXb7+2O+x2u4CJ7am7yzfcOr/Lze5Hug8KRON75j1CZ1JRAA4geJ1GNhrHvjG/PIf8A12PWZOEIa9qFUqZ4hYnM8IFjqBuPoDhMZmAp2rNZ+CFITo3spywoDqFRf1wioWlIEPKZUclChQQnDljLFO00LM3JUVxH5Ur1Gz1JR2juAO9aleyYfwTX1sSwWAyXFsM2KWMtbsR9si2BbBNsiYLCXh8Ee3LbYDbZFeK+DbRFsi2BbPAXb4r2MN4yDPxqL6MKYFqZsWWN0ALC4AhiOdkCltCB0D3i/w857/WP4KxaA8eH+SowhIPoXqpRDmxqm2Zhf4sg8G2EipsRAhIstbLJTx7DmTIehEPGARxdoaph7gLMw6gF/y7JpbBiDIctEhH+VecOu+MWx6sxbDWi/oMmxocRQKAH3AuOMOJaOMkfJg0NdCiWHU7J1iEAxmgZDIxgawdAIhkYAZN+QobEXDI3wXgdDIxgawdB4CoZGgz6MVzGgecwJMuYG0ipXWEfPmWFxqRRAc9uPzGY1tcUNPHrHLy3RuSV6oVQpJThRaJZjgP4chwfLw5IukbXDFCf7pgQDBb6F482XcNMFoH8BJsrQGycqL70dMeFKcTREOmZwm2CJj4QWxECMZMYGlUwoySqDx1AiMSbRWGJ181jw2D1aTRRgyAOCtRGsjWBtBGsjoLJvyNrYD9ZGeK+DtRGsjWBtPAVr40yJDeHKK6wlUVsHLaGOq22MLJ6j4zfNLeAMlVejMZ2ZiIzqLyZjXrL560YN6sqJTBLPX7nJfkWqIwBoGcZMwObJ8gmMhTETTJvCynpHMoaGh6UZwwsuXCPJwZyBJ1Sl3mTnpioDrBLKk8LK/MzcGxgn4msB49Fz0Ud0SwOBxRkVPKL8S8TBAgkWSLBAggUSkNo3ZIEcBAskvNfBAgkWSLBAnoIF8qn26ptIx9VZSRSowGQkvYDrYTysAqcjMaahKKJhSsRLoctGChOcEGNSU4dqx7HwO8VSkS6ge5/dBBej7CbpUqhM4GSTLXRSMilYI5EJhfe2yT6QJeNqQVKRDqibLNxHw37BMUU24iM8oz/3LDCiBssrrhJXPdJ4OnPXrkD8zgyQOe6GYIEEC+ReLBA34esaFY0FW5aQaPvksH9wuMqKzZ6xQNCzwmWeJIGkpxy6QuN5fHu1ztu9QefZIWqtt6x6e4xtaM4C4UWLKWJX9+5MEaQ8MQERdop9jS5RN7S2NXppgABnxogKG8PrBcp7IxGgjUFZUieoHFMQKB0C2VX4hXBkLAcblFdgsrTlbJZEp/ZqbgzzqNIibroxreblpVsTxBA23QLzptd2YXJ94dyM6AnFU3C1zWUOMO0bF5MngGwAUvA4hmnAe2tpxVPzvceg/AEMRMjwxlJ0dSbyAolkML87odyKFten76bVZJPPk7iVZGYtEBHIrL5JMqvDI3ZaQ1NytSM+PS8R0Y4kFhrnrGteTaS9SlffpF40u1UX5SwTmowN1zsVdhCXjVUo3NYiTHC6FHBT2GNIwRY4yqhAxEn+QJQTIXCsCcq3FpilhTxYwu4KAk8xVR7DKrM7JSykPWEK1yzhfP8dbJuw7WARPNggyGwFl4EdiarXIyVKgfunfwVw7yJWK9x2JZag03Nk+SSQVAVrI1gbrSpnmRVrPWMlxbbUqrWccp2xYbXN7Y2N7euNjZ3DWzvYdg7XNDYe39Zo6h3ryZzfq/Zb9qr9pfaqX7tnbIex/2CskVN8TJ1V31pd4pkrewiar+nusBoQfGbbe4A2VzbaoUJVBCJEvINGl+Xe6bhKV21hR5yT5xKNES3L1hwSvUmsqnVOyUBgGx9jyaHB47NKyD4zFD0AUzBfA85Lc4esnEe5AxgHkAynzXDKqkyJRPJBQrkh8Dmu4KZBNQppQjWlrrRmsThGbZfCngqs1pU6ncFdYFZFY0p177AB2FrwoHkGJ01ydaGZHJprmex5HMt3NMY7ygHS1RdsptwrEQnMt4dPUvR+w9PBUyKERC4gibylAYQFEPZSQdiqccqFx6zBztUO3wcIud9HA64b8deb2+Ov+WD9svjrMTaglR0sO28W9ynz2Y371P89+/Sx1z8//39sdsd6jIe7h34UpcrjivR/WpNjNNQ6VY45l+oukl+0lRo/PYy+TA7STsu87SzpdaNQrmBDBeLWICScC3h3nP/52mo/D5V0ISJyFyFG4foCJvGI/UbOnCYfyRUcI7+w49wQGta5v4Y1hNhJABclCTmLf2Fdm1lbAgDK8HoMLpYk7iDr1PoFkJyp96MgOxtWSdIs4LOPQZwlpXHWl1yNqA9dTCaKyT0OFknAOgHr3CXWsaloTwnrnHQB7HQD1nlAONCekHgbrNP72O39dvrh12cJdj6JocJ2IQ117V0R1nNgCueb+CfPLuFl599mWP/Occ+nJoUA4RPbFIXCi1pcUT7UYRxm9FKYRDiHcphx1gA2MSCHZ9OSmtTaVAALekzvl8gzq/0CB19ivsAsn5pmw4SPEBWJVKgR3ZrBNETYBjgHZgajYL+wLxTCtxmEcJeOB9oUEhGLG0XKsEdM410w2EiJYSIi+w2+OugWghWGkTIhYv0Lub+KXCPUY3qMMIhQon/XYIkSG7VFb5Nrzdt81eyzapOgYPxnyBUXoFSAUgFKBbdRgFLBbfSISKpn3AoLOrjmNEVmUanlYNabVFHP+rYI5UsDUqfDFgBjawumAEFHvOgYEOKnVI/zKvFEsDjDfIYkNvJ1E7zhUjJTDgCMiJkIEWGGool09c7OOibyNxRaw+kIicWlSPKCkArFuCi1qKsvZpCeSUeSur69JM8LU9fwzwpZqkwfDvMM/gnxFxnJgqos7grLhLKHAGaeB5hZBCfHvW73YJUVaz3jhjVrPef6VWs55TpEU9dVhESkbzgRaZcSkc59eKHr09qPRQGW/bGE09QddlZ+ZmZqyEG6ar7myyebNRgDRe6RhGutchBq5HRRknw3thgDs4G0SaxBzhcTfhOt9RemFFPEfJSPKPAV05tLMSwLv4jF0uEY1xWgMZYCTCuJDhOzg9wB6EHC0lQM8hkk1Qy+0UlKxIiIfXVsTcnDYBeyYT9yR5kkK27TkBiWziQYLqSb7eBIhuyTMyUBmRmQZfK3KHuLSmhsWlHJ4opm0Po8Kcar6d5Nrvp8dYpJdhqLbGYV3I2Ohc8Uc2Hhg5C3FDDbS8VswQF1C7gWHFBuUoMDakUHlM2qsaWebarea6y67rNWaFQCGhxRP59mNZm3pdyrM3w6Ta3fThhogoAUPsPYqg/pAdqYL14FkDRBF9YRpR/1jj+ed9gHOOZXkXVYr/e5Z1qj9k7eN5aT7jQzDH4WQE1nmyE1QFed2OQGQKRmuzO5sCN1cOLmuCkj0g8ZNY4rTcjt0mI6rHH1ZbexSLEprCEmmYN7mAc+Mvwev8xWCw+5TFqrefOs8aQmw970kPLJ9GaAJM8vRN00lrBbwiP8jBBhCAsGVBZQ2Z2ish9+2OvtHD8pVHbS7ff6D1HNF1CZm1T7FtwlKvv47rT35zMFZRs2eDQTgXI92lU1QEVLDhhUhmfdfzQdDAGLIWmKMp3nTWoRIJ0MY21cNchEiCeZ0oJ4OyRL0W1VAxWBGKng2lW/Nb1OmG9ULfCwbbIvuSJY59fKu+c+LbrnYPhYDGUmWCozmcK9uBWPlITTJKdbtld3PCYUy0yR+AXvx0cRiQilQJxnmtPkw0XQVJWUEBVATwA9AfSEtPIAekJa+WPCnrfY+Yy0WG3LJ6j4eDT1zicqEkcldlWuTYA/xBlnonHIYSS+Sl2ajCHAQQMR8UoLR16UClYVfnJdPCrlGR8ZRqNm4X0dOWw4bDaRGsvV4/nVOTumSOAQpjpBhxB8N5gyakzhsK2jc52Dr3ReTmRMsQm2xS4QSdHLNqYEi4IUl9p4rYZJDtdy7SvssyIZwWwEz7bxCAlUAQEFBHT9evVPfjjZnaciv3bFWs+4Yc1az7l+1VpOuQ4G1cgsJFB9wwlUeyaBquYf73mS8T9A3yQhdSqkTq1FtYtvlKY3qqatl3qG1sikUaWAV2SRUITsQiAbAMCky1xGQiMMMgQCzoHTYO63XAUWam2y08xTXnbq8J9P9DbBLJuJlLt6PndnFG2ktTO/EqDK8lQSQvY54kSggEBqobwAK+RqRIXs/VwJSp7y+fASGYYnfOrieRQxJG+VJ7pKieUKjw8JTAEzvVTMFBKYbgGXgtfITWpIYFplE/4k/lVJJZoKyyk5JPlRclDVjWIoEdkkwkQiOIp+PrMzlXGsi6dWAq0AiPr1ZLoaDgFPoFfI1/wDmkkFz2CahlVim/gQDlgodKsGMBhcgHqLIocjbDi+c4Av4SOQkutSC+R74s2iPsBIhnPSryusNTqLPA3CFajGkj11fMuhyCMxz3BQcw8YrgPKbYKplPEMalugeUqkLg1Ppw8rIlqsX8bFl5DDlMKRV7BUBhMlQKgAoQKEChAqQKgHglD9DAmCMDvXISeVmxxe0LkYY1noJxSg08990PcD0P5jm4+M3dHNnJGbBHON8S4BiiwyLDk/TivWorkHNIZNnqZsF7HTHjl3iA9cUiL3peHEFoXpAEnjNMCK59IkV5L1SSGyGmCEVRMIyzn6q9wNDQDMmdq9yVjCbzzRyEIFT6o9iKNCtrbka2UguCZihJqDIXM1bVjnanisqAZvhp7JVb7tIN7aZSPZvCJ1s6esKJMMl9HFEpNePpaF9unktgMkXCNgqoCpAqYKyUwBU4VkpscEVb+JpPCKLEpyl5jSZPkxitrpYJkVFbERNVwXhosowK2fvyD4WCR6wrgTbNF+Wjt+yi3J00Aw0+HEUi2Rt2mM4bTMtM7mgCgw9cg2PrGncX1BudYEWJw3h7s+cQ3e05plocY0CKNMM22s3eNVLEvDcICdup3jrEnn1PCboffItaSjRKU69BiylAK0CdDm+vU6fnPQ3dteZcVaz7hhzVrPuaG59eIp1+GbumguZCl9w1lK+5SlZElqKFmpXyeCwNbe8w2rWA8bPAzyr8F8DVlLK2ctXfGGNfOWCOqMRFZhfZmvJDQU3J7u0rfmNShqw9AlzfbpnVBtXZO9iCJfuukrHGLF2T/sRU6zGCNuOTqwZpKdsB3cTA9ebe4SVjE1hN62Sr+Zg86v4PmG47Hiv24vnvIpM1V7Y5FqkaBjqcokDp5MqZe69x6RU8sDs9wxr9smdIajQJsEKgKJODSPIlGUJqxJVQi1M6ruY+cYHaKEy7Q1zfxlSXFAai8VqQUn1C1AWnBCuUkNTqiVduGa3QlzajbmeqoBODDJOJQ1bOJNRvEHh9PPTW8QTIqIq0QQ+GgGryjx2rSjxdkgnkkzg3/jMOM/6vk2dt43hLTuJmAnmHMPEQVT3QJXlpvsC4Et7jqqKIoMyhJHZefVAJFXKSkpqguYSFCnYa4vjuY6s1hAY0iQfrl2VEwJu3pE2+63kfDNioTb5HIKEE6QFx2Q3UA4sqrYdr9DjgJdxz0bk9LAdKawMKV0LdMrr+AFYj/FZRJiewFWBVgV8qUCrAr5Uo+JqtDPsaHEELQoadc5dWYdBoyPOKozbA7CQNHzgKp+Pp+bKuMYaQTrAImUFLCbn7xN1nV4hUJnBrR89vnY5yYfm+srcBEhrDG3pNw/NPO3TY0bXoicYPbC3LMw5UO2c0Df4fmF6fMcu1z5xtOUFiIhcKk5ys+ncIkUjjC05KYR9Pw7AqBSDiU9uXtiwOwAB/Umey91iuQFyDUukLHJOKwyioTiMTZUKTygb6LUAJoCaAqgKYCmAJoCaHpE0PS7TYAyOcGLLgAkTywSGclyIb8YBim4Cp2DZ3jGa25xSg431AFXxAFreOVCanHNSOmnvahUgfEugDtmxnEeHbJoZbb0vFHk+FqI99XXsMANIRQCPFqgRrcXehksFbhhckI6BSSmqjLMUteRquDLqcmXa+NDr8N+lqTARg4pf0t8FSpCZigT3AQMZpso87I1n51um9ruGe9ZM/yoYZIUjHV3nFG7288LVzUftngbN3RNuzLtnnR/6PecontDv5grOQThRnkaUzdwT9KI8A9a4/5PJUPgW8momFVHdzt7hy2zd7jU7HXZCbGpfMhhP4HNtOdc1WemM/k3MrlP5WU0pdJovWMLecxPiZQcGBP83OaiHLqSIjS2I4GMyzGW7qdU9mRKxEFnTWfsXEMcODDpHLDFJ9SRTGRxhw2l0mXH1rdTH3mJmS4Tk81BOoZyWPBMidVvaLbjjVr9lmDOjE1vwXGHeaVMhy8qZ7Lvg+1Uv8n6FElD6sUINMbAlNUZbwSPY5gJjTxCVnUORIlBJPIKJETUSDciU4FXBev/rU1QUdhgDBNyqFJPaq9B6SEIDNThJ3KEuCwfny2NWtWmpGBqeZRXWemyo8XXSCQJ6TsiYFSUixOjD4SWK1f4qAmlC+HDYlQGi+ZDUkuQ9etkvUHRdmaF2XrIMPMeo5I4X4MKrNpsk536ECOgrBTpH1IRAe6SOkX+UFOciBWTtBOAFH/4s8d6n/t1zz4TjZ3pIOj9cpYNvsPANM1B/GxO10wTHBKziCtB1ZHleMKn2mwGSEzrbg6kCcZNQeKxfKCA3Yc6dCNavhCiMEIGF63vvpnUDzI/EbaYMs3NrkbB0wVca/odTtD7d0Vt48uSteC0e6lOuxuccEt1dF7CbbfcZW7I9d873uktz0h6Z6673etdd7vbN7rudm9w3dkhVnfdPUbF0Zx3C+Dasj48Nw0z29b28irPMQF9Ae02Zr8Z1PXtua7uHA90fcq4rX7DxHJMPFpwwbhgHeKEAarKmmQKULQplzPMlMbj5aBuMzEJzyfpoVjdgCvTm7gemLvQYI19jaYf5TxxjE9X4xdKFFeXCDZaPWQWy+SGdYGQhgYjhsusRis0DzYrHx7M+N1EjXCc+21YoWmhrWmDLZAB5esV6Q40gByzPmOB7A+ffATbS7oY8iopXzF1JOOfXqnT2MrGMAfrd6kTrPu7GJ3/5TaV3X16k8fw+8Eb83uObadLeDdAQhSXpTvpPXKY4v6GcQSDXWgvqv80m1f9N2529V/mwX569f02OZLMbfs/R1VpBcte7kOVfobnoL/iPEK9hUPCYpxJgFw/varVmpu8LbyFeEq/uMLQn/8/UEsDBAoAAAAIAPtpmlzVPclohAMAAPAVAAAPAAAAd29yZC9zdHlsZXMueG1s5VhtU+IwEP4rnX7X0lIQGdFBlNEZ587xdO5zSFPI2Ca9JBW5X39Jm5bSlwOlonPnF8lu+nSffXbJhrOL1zAwXhDjmJKRaR93TAMRSD1M5iPz6XF6NDANLgDxQEAJGpkrxM2L87PlkItVgLgRwuHtnFAGZoH0Lm3XWNo905CohA9DODIXQkRDy+JwgULAj2mEiHT6lIVAyCWbWyFgz3F0BGkYAYFnOMBiZTmdTj+DYbugUN/HEF1RGIeIiOR5i6FAIlLCFzjiGdpyF7QlZV7EKEScy0yEQYoXAkxyGNutAIUYMsqpL44lGR1RAiUftzvJpzBYA/TeBuBkACr9HoVXyAdxILhasnuml3qV/JtSIrixHAIOMR6ZY4aBfP1yCHlhgQAXY45BwbQYE57vtxQUpAFl0vMCgpHpqj87dfDfmdVxMsuEb9osHZFVjjPKV+muEqmkxCSUWEWytiLAwJyBaKEiTFy33sh8xCJASUYICFH23tSahDMDHHnfSeb5pkTWpAh6FXX2X9OkEqxCKtc0e/0qzdRWoJmEtyuFGwRUu9kVFtph2G0y2VDSuT5xL3tlJbs1SnbLSr6HotNI0TkwRadGRacNFbuNFLsfRtGeulcngwpFt4ai2wJFt5Gi2yZFnCzwhFe/gNaa7kml10ild4CC3DP4fmPw/QOU2nuD/yEYJfNK6NrcYtyzFCupn/cGe4e5uM895ZiV11i7t8W+jrE5DLiQcFAgtim49LEAk+eq4rmn7u36MM1DVPNAujHG9wxTJietbO/pqfaQBfbQzwUiTxKrsRA6vX53og+mODOqWSk9d7cnvJ7plFJBqEAPyEdMDqLVo93XOwyWb2mLOkchvsGeh8iWTMh5WYwDPM/fxmMpA4cMR2Kf3sjYP8oqbyYulHdbsamayOxF2IlM+/55iPRUFAGovm/khOlLJWVVKDry1UgdNfniIVZ3AxALqpOjH6/MVk6n5sjqtFFPOfVyVrMNhtphrLOzczk1Jbq1YvvI9FwT7+/dhtIN/2Kzae61vZbRfnOrFUD/s04rMy+nVPtb6bOidF+rzT71htdUK3Y/KZAZ8imTMboDTZDGQhXN3UuQn+q1ZdPi7wjFoaw0UfS67vjypHIXrbmoddu4qH30XbRRDGdDjK7TKIb9iWI0/MQzqOmMvW4DB7o1N4kx2NDC6TRq4Xw9Ld5wvc8+8fM/UEsDBAoAAAAAAPtpmlwAAAAAAAAAAAAAAAAJAAAAZG9jUHJvcHMvUEsDBAoAAAAIAPtpmlze6lAgOwEAAIMCAAARAAAAZG9jUHJvcHMvY29yZS54bWyVkl1vwiAUhv9Kw31LqR9xpK3Jtng1kyXTbPGOwFHJCiXArP770aq1Zt7sEt6HJ+85bT4/qio6gHWy1gUiSYoi0LwWUu8KtF4t4hmKnGdasKrWUKATODQvc24ory2829qA9RJcFDzaUW4KtPfeUIwd34NiLgmEDuG2tor5cLQ7bBj/ZjvAWZpOsQLPBPMMt8LY9EZ0UQreK82PrTqB4BgqUKC9wyQh+MZ6sMo9fNAlA1JJfzLwEL2GPX10sgebpkmaUYeG/gR/Ld8+ulFjqdtNcUBlLjjlFpivbbnWsWYKRI4Hl+0CK+b8Mmx6K0E8nwbc36zFLRxk+5VK0hH9Mb8MfXaDiEJZeh7tmnyOXl5XC1RmaTaN03GcTVdkRMmETsZJNp5t2mp3jptUXUr82/o0sF4lZdf8/scpfwFQSwMECgAAAAgA+2maXG2nSXCKAgAAIA4AABIAAAB3b3JkL251bWJlcmluZy54bWzVV8uO0zAU/ZXI+9ZJmj4UTWYEjAYV8ZIoH+AmbmvVL9lOMt2xZ8EOtiM+jS/BTpv0AQxtykhl5fo+zj2+1/e6ubq5Z9QrsNJE8AQEXR94mKciI3yegI+Tu84IeNogniEqOE7ACmtwc31VxjxnU6ysmcfSeDznQqEptQZlEHll0PdKGUTAs+hcx6VME7AwRsYQ6nSBGdJdRlIltJiZbioYFLMZSTEshcpg6Ad+9UsqkWKtbYwXiBdI13DsVzQhMbfKmVAMGbtVc8iQWuayY9ElMmRKKDEri+0PahiRgFzxeAPRaQg5l3hNaLPUHuqYuGuXW5HmDHNTRYQKU8tBcL0gcnuMtmhWuahBiscOUTC6LUEQnVeDW4VKu2wBj6GfrZ0YXTN/HDHwj6iIg2g8jqGwH7NmwhDh28CtUrOT3KB/GkB4CCDn5xXnpRK53KKR89DGfNlguaY/AWtT5N2j6fPIfFggiYEbOWiqjUKpeZszb283zuzoAm7sxArbaaWccD2dns0MVs8VRssE+BUKy6khr3GB6WQlsQUqELUMV1NFsjdOR50OQGdLC2oNiF2cdxXA2Da0vVxgF9LZVPFqmGDtZ4fjHWuE05xSbBrECb5vVD++fWnkr9JaSvFsYy7fK7cQnlmdEydgGDom8QLxeTWkewPf2cKNMaywDskHT0P+86nkgyhqwT58EvZfH05lHwaDFux7F3JxwtGoBfvoQm6OJduCff9Cbk7Ua9O1gwu5OX2/TdcOL4X9sE3Xji6E/SA6rmvh3ov41+cy/D+fy0/fT67+wdUNj00fr9LG638XBxkdZwdnsCjv7HeUzQreyUFz4h3d1gvuuVV7/pvg4Z+Dh/8+ONz5trv+CVBLAwQKAAAAAAD7aZpcAAAAAAAAAAAAAAAABgAAAF9yZWxzL1BLAwQKAAAACAD7aZpcH6OSluYAAADOAgAACwAAAF9yZWxzLy5yZWxzrZLPSgMxEIdfJcy9O9tWRKRpL1LoTaQ+QEhmd4PNHyZTrW9vKIpW6tpDj5n85ss3QxarQ9ipV+LiU9QwbVpQFG1yPvYanrfryR2slosn2hmpiTL4XFRtiUXDIJLvEYsdKJjSpEyx3nSJg5F65B6zsS+mJ5y17S3yTwacMtXGaeCNm4Lavme6hJ26zlt6SHYfKMqZJ34lKtlwT6LhLbFD91luKhbwvM3scpu/J8VAYpwRgzYxTTLXbhZP5VuoujzWcjkmxoTm11wPHYSiIzeuZHIeM7q5ppHdF0nhnxUdM19KePIxlx9QSwMECgAAAAgA+2maXNJ3/LdtAAAAewAAABsAAAB3b3JkL19yZWxzL2hlYWRlcjEueG1sLnJlbHNNjEEOAiEMRa9CuneKLowxw8xuDmD0AA1WIA6FUGI8vixd/rz3/rx+824+3DQVcXCcLBgWX55JgoPHfTtcYF3mG+/Uh6ExVTUjEXUQe69XRPWRM+lUKssgr9Iy9TFbwEr+TYHxZO0Z2/8H4PIDUEsDBAoAAAAIAPtpmlzSd/y3bQAAAHsAAAAbAAAAd29yZC9fcmVscy9mb290ZXIxLnhtbC5yZWxzTYxBDgIhDEWvQrp3ii6MMcPMbg5g9AANViAOhVBiPL4sXf689/68fvNuPtw0FXFwnCwYFl+eSYKDx307XGBd5hvv1IehMVU1IxF1EHuvV0T1kTPpVCrLIK/SMvUxW8BK/k2B8WTtGdv/B+DyA1BLAwQKAAAACAD7aZpcv0uFPMsCAACFCwAAEAAAAHdvcmQvaGVhZGVyMS54bWy9ls1uozAQx8/7Fhb31pAmaYqaVDQhVaVV2u3HYY8OmGAVsGU7oa162IfYJ9wnWfNhSEtUQdLdCzaD5zd/z3iA84vnOAIbzAWhydiwjk0D4MSjPklWY+PxYX40Mi4m56kd+hyopYmwU+aNjVBKZkMovBDHSBzHxONU0EAeezSGNAiIh2FKuQ97pmXmM8aph4VQ3ClKNkgYJS5u0ijDiXoYUB4jqW75CsaIP63ZkaIzJMmSRES+KLY51Bg6NtY8sUvEUSUoc7ELQeWgPXibuIXLjHrrGCcyjwg5jpQGmoiQsHob+9LUw1BDNp9tYhNHRlUCq39YDWYcpWqogW3k+4VTHBXKPydaZouKZIjKo42E9zG1khiRpA68V2q2kmsNugF6HwFsdVhxrjhds5pGDqNdJ08VK8GdWGWRt7cmDhNzHyJWdaD33A5WnruM14deiLjEzzXD6gwZwDM4aoJ6e4DUBntWE3XSGTWEmaoGqOVZ/gBSqhqklof6I2nH5ob7kXpN0ul+pJMmabQfqXGcUmvoEb/bGddNApXnFkd06zV1mEqMeImVoOyjy/LLLc+HSz8fl1RKGoPU3qBobGQ9FamGSm2PRlR90py5c+ZOM4N4HRv9fMKQh7M5nJzDGiTRUpSjpnGyCmXmwqjq8zOzNyx99NoMpSKqFSiQWIUbmdnyJVbvaBXC1CEKycWlnM9pIkXmKDyi3mgOJyjKdYutG4yEdARBW6bQSUS1HuYZ0HIDFAlc2qZih5Xssu1cmWdP2wfzgTtwigfiVVutkbbUhMIGq13KrPw64YxjgfkGG5PFzymY3bjgDdzkNQc0APdy7aufAHCrvv8pehHgz6/fYPrggltOVxzF4McaZX85efqLGP8wp1+yzW//R+tSV7xrjRETO4p90ncuT78wC9eLB/du4XwHd+7cvXMXUxdcPV7P3HfJgXlzw/y/evIXUEsDBAoAAAAIAPtpmlwfV4fJTgIAAHwIAAAQAAAAd29yZC9mb290ZXIxLnhtbNWWS3PTMBCAz/wLjQ/cEtmhKcHE6YQ8GC60Q+DAUXHWsaa2pJEUu+3w41n5lRQynbQBZrhY8mr325dkeXx1l2ekAG24FJEX9H2PgIjlhott5H37uuyNvKvJuAwTqwmqChOWKo681FoVUmriFHJm+jmPtTQysf1Y5lQmCY+BllJv6MAP/GqmtIzBGOTOmCiY8Rpc/jtNKhC4mEidM4uvektzpm93qod0xSxf84zbe2T7ly1GRt5Oi7BB9LqAnElYB9QMrYU+xW9tMpfxLgdhK49UQ4YxSGFSrvZpvJSGi2kLKZ5Kosgzr2tBcHFeD+aalTjsgaeEv6mN8qyO/Gli4J/QEYfoLE4J4bHPNpKccbF3/KLSHBQ3GD4PMPgVoLbnNeejlju1p/HzaJ/EbccS8CxW0+TD1Mx5waxSpsBzHxRVPW50NXzYVKOVipRhwbLIc8oZntUyjGUm8azO38yD2VsnMA+Rd1FNFIvBzelkTA8obG2asaVpvk2tM1ESE3jnDy4bm1bXodAjarDEArrznfYacO+hh5HfuqjjrR/NfCmFNc7QxBxbNdWcZVXc5uAFmLFTw9mBKJ0K0+lTh+rCTVhmoJHNzBEpPyY7qllVr5UPl8PFcFovmIdWGoxayZ5Qy2iXpXUboC240mBAF9jHFWRJb2V3m3vymuXqPVncYfUEy8gXKDiUIZmSGX6zNaSA2RaA8gQ03jBQVb928RdL+keyfPVvYv3/2v/5+4zMrxfkB7mujj2RCXG7AS83coP3WsnuzaPa0erc0+p3YvITUEsDBAoAAAAIAPtpmlxTUFcTrgEAADgJAAATAAAAW0NvbnRlbnRfVHlwZXNdLnhtbLVWwW7bMAz9FcPXIVa6w1AMSXrY1uPaQ/cBikQ72ixRkOi0/ftSdmLAXZxma3Uz+fj4nkQK8OrmybbFHkI06NblVbUsC3AKtXHNuvz1cLu4Lm82q4dnD7HgUhfX5Y7IfxUiqh1YGSv04BipMVhJHIZGeKn+yAbE5+Xyi1DoCBwtKPUoN6vvUMuupeLbkE+t16Wxqd67pix+PHF6sJNicZbx28OU0if+mfMWZWv9hJHi84zG1BNGis8z4r75xPc4YXFuliW9b42SxIVi7/SrOSwOM6gCtH1N3Bkf/xJgNF6k8JqY4v90hnVtFGhUnWVKhdu6i1wN+pabTERQE/XXdscbGoyG9+g8YtA+oIIYebltW42IlcYNN3MvA/2UlnuLVC7GksNxs/iI9NxCPG1gwN4lf1wEhQEWLOwhkDmhxwbvGY0iFX7kgVUXCe1l0n3pR4pD2iYN+iJ5bp110q6zWwj8fXrYI5zVRI1IDmlu40Y4qwmeyRkPRzTvswMi/pp7eAc0qwWFNgEzFo5o5m3gRnLbwtw2HOCsJnYgNYTTDgbsKvuTmNMfsFFf9L9CmxdQSwMECgAAAAgA+2maXFh52yKSAAAA5AAAABMAAABkb2NQcm9wcy9jdXN0b20ueG1snc5BCsIwEIXhq5TZ21QXIqVpN+LaRXUf0mkbaGZCJi329kYED+Dy8cPHa7qXX4oNozgmDceyggLJ8uBo0vDob4cLFJIMDWZhQg07CnRtc48cMCaHUmSARMOcUqiVEjujN1LmTLmMHL1JecZJ8Tg6i1e2q0dK6lRVZ2VXSewP4cfB16u39C85sP28k2e/h+yp9g1QSwMECgAAAAgA+2maXOL8ndqTAAAA5gAAABAAAABkb2NQcm9wcy9hcHAueG1snc5BCsIwEIXhq4TsbaoLkdK0G3HtoroPybQNNDMhE0t7eyOCB3D5+OHjtf0WFrFCYk+o5bGqpQC05DxOWj6G2+EiBWeDziyEoOUOLPuuvSeKkLIHFgVA1nLOOTZKsZ0hGK5KxlJGSsHkMtOkaBy9hSvZVwDM6lTXZwVbBnTgDvEHyq/YrPlf1JH9/OPnsMfiqe4NUEsDBAoAAAAIAPtpmlycicmRzgEAAK0GAAASAAAAd29yZC9mb290bm90ZXMueG1s1ZTNTuMwEMdfJfK9dVIBWkVNOYBA3BDdfQDjOI2F7bFsJ6Fvv5PETbosqgo9cYm/Zn7zn5nY69t3rZJWOC/BFCRbpiQRhkMpza4gf34/LH6RxAdmSqbAiILshSe3m3WXVwDBQBA+QYLxeWd5QeoQbE6p57XQzC+15A48VGHJQVOoKskF7cCVdJVm6TCzDrjwHsPdMdMyTyJO/08DKwweVuA0C7h0O6qZe2vsAumWBfkqlQx7ZKc3BwwUpHEmj4jFJKh3yUdBcTh4uHPiji73wBstTBgiUicUagDja2nnNL5Lw8P6AGlPJdFqRaYWZFeX9eDesQ6HGXiO/HJ00mpUfpqYpWd0pEdMHudI+DfmQYlm0syBv1Wao+Jm118DrD4C7O6y5jw6aOxMk5fRnszbxOov9hdYscnHqfnLxGxrZvEGap4/7Qw49qpQEbYswaon/W9Njp+cpMvD3qKFF5Y5FsAR3JJlQRbZYGiHz7PrB28ZxwhowKog8HanvbGSfc6rq2nx0vQhWROA0M2aTu7jJ863Ya/66C1TBXmIal5EJRy+mSI6RuNqPo77E26SPR3QQTOdvT5Nl4MJ0jTDK7P9mHr6EzL/NINTVTha+M1fUEsDBAoAAAAIAPtpmlzSd/y3bQAAAHsAAAAdAAAAd29yZC9fcmVscy9mb290bm90ZXMueG1sLnJlbHNNjEEOAiEMRa9CuneKLowxw8xuDmD0AA1WIA6FUGI8vixd/rz3/rx+824+3DQVcXCcLBgWX55JgoPHfTtcYF3mG+/Uh6ExVTUjEXUQe69XRPWRM+lUKssgr9Iy9TFbwEr+TYHxZO0Z2/8H4PIDUEsDBAoAAAAIAPtpmlw/So6NwQEAAJIGAAARAAAAd29yZC9lbmRub3Rlcy54bWzNlNtu4yAQhl/F4j7BjrrVyorTix5Wvaua3QegGMeowCDA9ubtd3wIzrZVlDY3vTGnmW/+mTGsb/5qlbTCeQmmINkyJYkwHEppdgX58/th8ZPcbNZdLkxpIAifoL3xeWd5QeoQbE6p57XQzC+15A48VGHJQVOoKskF7cCVdJVm6TCzDrjwHuG3zLTMkwmn39PACoOHFTjNAi7djmrmXhu7QLplQb5IJcMe2en1AQMFaZzJJ8QiCupd8lHQNBw83DlxR5c74I0WJgwRqRMKNYDxtbRzGl+l4WF9gLSnkmi1IrEF2dVlPbhzrMNhBp4jvxydtBqVnyZm6Rkd6RHR4xwJ/8c8KNFMmjnwl0pzVNzsx+cAq7cAu7usOb8cNHamyctoj+Y1soz4FGtq8nFq/jIx25pZvIGa5487A469KFSELUuw6kn/W5OjFyfp8rC3aOCFZY4FcAS3ZFmQRTbY2eHz5PrBW8YxABqwKgi83GlvrGSf8uoqLp6bPiJrAhC6WdPoPn6m+TbsVR+9Zaog96OYZ1EJh++jmPwmWxFPp+0Ii6LjAR0U0+j0UaocTJCmGR6Y7du00++f9Yf6T1RgnvvNP1BLAwQKAAAACAD7aZpc0nf8t20AAAB7AAAAHAAAAHdvcmQvX3JlbHMvZW5kbm90ZXMueG1sLnJlbHNNjEEOAiEMRa9CuneKLowxw8xuDmD0AA1WIA6FUGI8vixd/rz3/rx+824+3DQVcXCcLBgWX55JgoPHfTtcYF3mG+/Uh6ExVTUjEXUQe69XRPWRM+lUKssgr9Iy9TFbwEr+TYHxZO0Z2/8H4PIDUEsDBAoAAAAIAPtpmlxNn8rKoQEAAHMFAAARAAAAd29yZC9zZXR0aW5ncy54bWyllN1u2zAMhV/F0H0iu1iLwahbdCvW9WLYRbcHYCXZFiJRgiTby9uPjuO4P0CRNFeSQfE7R6TF69t/1mS9ClE7rFixzlmmUDipsanY3z8/Vl9ZFhOgBONQVWyrIru9uR7KqFKiQzEjAMZy8KJibUq+5DyKVlmIa6tFcNHVaS2c5a6utVB8cEHyi7zIdzsfnFAxEug7YA+R7XH2Pc15hRSsXbCQ6DM03ELYdH5FdA9JP2uj05bY+dWMcRXrApZ7xOpgaEwpJ0P7Zc4Ix+hOKfdOdFZh2inyoAx5cBhb7ZdrfJZGwXaG9B9doreGHVpQfDmvB/cBBloW4DH25ZRkzeT8Y2KRH9GREXHIOMbCa83ZiQWNi/CnSvOiuMXlaYCLtwDfnNech+A6v9D0ebRH3BxY47s+gbVv8surxfPMPLXg6QVaUT426AI8G3JELcuo6tn4W7Nx4kgdvYHtNxCbhmqBcpfGx5DqFd6h/C3lTwWSplk2lD2YitVgomK7M9OUWHZP0wCbTxaXjLYIlqRfDZRfTqox1IUTSj5K8kWTL/Py5j9QSwMECgAAAAgA+2maXIuGOcTFAQAAxggAABEAAAB3b3JkL2NvbW1lbnRzLnhtbKXU3XLiIBgG4FtxOFeSWFM307Qnne30eNsLoIDCNPwMoNG7X1IlSZedToJH6iTfk5fXwMPTSTSLIzWWK1mDfJWBBZVYES73NXh/+73cgoV1SBLUKElrcKYWPD0+tBVWQlDp7MID0lb4VAPmnK4gtJhRgexKcGyUVTu38vdCtdtxTCExqPU2LLL8DmKGjKMn0Bv5bGQDf8FtDBUJUJ7BIo+p9WyqhF2qCLpLgnyqSNqkSf9ZXJkmFbF0nyatY2mbJkWvk8ARpDSV/uJOGYGc/2n2UCDzedBLD2vk+AdvuDt7MysDg7j8TEjkp3pBrMls4R4KRWizJkFRNTgYWV3nl/18F726zF8/woSZsv7LyLPCh247f60cGtr4LpS0jGvb15mq+YssIMefFnEUTbiv1fnE7dIqQ7q+sq9v2ihMrfUdPl+qHMAp8a/9i+aS/Gcxzyb8Ix3RT0yJ8P2ZIYnwb+Hw4KRqRuXmEw+QABQRUGI68cAPxvZqQDzs0M7hE7dGcMre4WTkpIUZAZY4wmYpRegVdrPIIYYsG4t0XqhNz53FqCO9v20jvBh10IPGb9Neh2OtlfMWmJX/tq7tbWH+MKQpgI9/AVBLAwQKAAAACAD7aZpc0nf8t20AAAB7AAAAHAAAAHdvcmQvX3JlbHMvY29tbWVudHMueG1sLnJlbHNNjEEOAiEMRa9CuneKLowxw8xuDmD0AA1WIA6FUGI8vixd/rz3/rx+824+3DQVcXCcLBgWX55JgoPHfTtcYF3mG+/Uh6ExVTUjEXUQe69XRPWRM+lUKssgr9Iy9TFbwEr+TYHxZO0Z2/8H4PIDUEsDBAoAAAAIAPtpmlxj7V7WHQEAAEMDAAASAAAAd29yZC9mb250VGFibGUueG1sndHdbsIgFAfwVyHcK7WZjWms3ixLdr89AAK1RA6n4eDUtx+ttmvijd0VEPL/5Xxs91dw7McEsugrvlpmnBmvUFt/rPj318diwxlF6bV06E3Fb4b4fre9lDX6SCylPZWgKt7E2JZCkGoMSFpia3z6rDGAjOkZjgJkOJ3bhUJoZbQH62y8iTzLCv5gwisK1rVV5h3VGYyPfV4E45KInhrb0qBdXtEuGHQbUBmi1DG4uwfS+pFZvT1BYFVAwjouUzOPinoqxVdZfwP3B6znAfkTUChznWdsHoZIyalj9TynGB2rJ87/ipkApKNuZin5MFfRZWWUjaRmKpp5Ra1H7gbdjECVn0ePQR5cktLWWVoc62F2n1x3sPsy2NACF7tfUEsDBAoAAAAIAPtpmlzSd/y3bQAAAHsAAAAdAAAAd29yZC9fcmVscy9mb250VGFibGUueG1sLnJlbHNNjEEOAiEMRa9CuneKLowxw8xuDmD0AA1WIA6FUGI8vixd/rz3/rx+824+3DQVcXCcLBgWX55JgoPHfTtcYF3mG+/Uh6ExVTUjEXUQe69XRPWRM+lUKssgr9Iy9TFbwEr+TYHxZO0Z2/8H4PIDUEsBAhQACgAAAAAA+2maXAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAQAAAAAAAAAHdvcmQvUEsBAhQACgAAAAAA+2maXAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAQAAAAIwAAAHdvcmQvX3JlbHMvUEsBAhQACgAAAAgA+2maXFjLDW8PAQAAIQUAABwAAAAAAAAAAAAAAAAATAAAAHdvcmQvX3JlbHMvZG9jdW1lbnQueG1sLnJlbHNQSwECFAAKAAAACAD7aZpcquPvK100AAD+WQIAEQAAAAAAAAAAAAAAAACVAQAAd29yZC9kb2N1bWVudC54bWxQSwECFAAKAAAACAD7aZpc1T3JaIQDAADwFQAADwAAAAAAAAAAAAAAAAAhNgAAd29yZC9zdHlsZXMueG1sUEsBAhQACgAAAAAA+2maXAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAQAAAA0jkAAGRvY1Byb3BzL1BLAQIUAAoAAAAIAPtpmlze6lAgOwEAAIMCAAARAAAAAAAAAAAAAAAAAPk5AABkb2NQcm9wcy9jb3JlLnhtbFBLAQIUAAoAAAAIAPtpmlxtp0lwigIAACAOAAASAAAAAAAAAAAAAAAAAGM7AAB3b3JkL251bWJlcmluZy54bWxQSwECFAAKAAAAAAD7aZpcAAAAAAAAAAAAAAAABgAAAAAAAAAAABAAAAAdPgAAX3JlbHMvUEsBAhQACgAAAAgA+2maXB+jkpbmAAAAzgIAAAsAAAAAAAAAAAAAAAAAQT4AAF9yZWxzLy5yZWxzUEsBAhQACgAAAAgA+2maXNJ3/LdtAAAAewAAABsAAAAAAAAAAAAAAAAAUD8AAHdvcmQvX3JlbHMvaGVhZGVyMS54bWwucmVsc1BLAQIUAAoAAAAIAPtpmlzSd/y3bQAAAHsAAAAbAAAAAAAAAAAAAAAAAPY/AAB3b3JkL19yZWxzL2Zvb3RlcjEueG1sLnJlbHNQSwECFAAKAAAACAD7aZpcv0uFPMsCAACFCwAAEAAAAAAAAAAAAAAAAACcQAAAd29yZC9oZWFkZXIxLnhtbFBLAQIUAAoAAAAIAPtpmlwfV4fJTgIAAHwIAAAQAAAAAAAAAAAAAAAAAJVDAAB3b3JkL2Zvb3RlcjEueG1sUEsBAhQACgAAAAgA+2maXFNQVxOuAQAAOAkAABMAAAAAAAAAAAAAAAAAEUYAAFtDb250ZW50X1R5cGVzXS54bWxQSwECFAAKAAAACAD7aZpcWHnbIpIAAADkAAAAEwAAAAAAAAAAAAAAAADwRwAAZG9jUHJvcHMvY3VzdG9tLnhtbFBLAQIUAAoAAAAIAPtpmlzi/J3akwAAAOYAAAAQAAAAAAAAAAAAAAAAALNIAABkb2NQcm9wcy9hcHAueG1sUEsBAhQACgAAAAgA+2maXJyJyZHOAQAArQYAABIAAAAAAAAAAAAAAAAAdEkAAHdvcmQvZm9vdG5vdGVzLnhtbFBLAQIUAAoAAAAIAPtpmlzSd/y3bQAAAHsAAAAdAAAAAAAAAAAAAAAAAHJLAAB3b3JkL19yZWxzL2Zvb3Rub3Rlcy54bWwucmVsc1BLAQIUAAoAAAAIAPtpmlw/So6NwQEAAJIGAAARAAAAAAAAAAAAAAAAABpMAAB3b3JkL2VuZG5vdGVzLnhtbFBLAQIUAAoAAAAIAPtpmlzSd/y3bQAAAHsAAAAcAAAAAAAAAAAAAAAAAApOAAB3b3JkL19yZWxzL2VuZG5vdGVzLnhtbC5yZWxzUEsBAhQACgAAAAgA+2maXE2fysqhAQAAcwUAABEAAAAAAAAAAAAAAAAAsU4AAHdvcmQvc2V0dGluZ3MueG1sUEsBAhQACgAAAAgA+2maXIuGOcTFAQAAxggAABEAAAAAAAAAAAAAAAAAgVAAAHdvcmQvY29tbWVudHMueG1sUEsBAhQACgAAAAgA+2maXNJ3/LdtAAAAewAAABwAAAAAAAAAAAAAAAAAdVIAAHdvcmQvX3JlbHMvY29tbWVudHMueG1sLnJlbHNQSwECFAAKAAAACAD7aZpcY+1e1h0BAABDAwAAEgAAAAAAAAAAAAAAAAAcUwAAd29yZC9mb250VGFibGUueG1sUEsBAhQACgAAAAgA+2maXNJ3/LdtAAAAewAAAB0AAAAAAAAAAAAAAAAAaVQAAHdvcmQvX3JlbHMvZm9udFRhYmxlLnhtbC5yZWxzUEsFBgAAAAAaABoAigYAABFVAAAAAA==";
+
+  function downloadGuide() {
+    const binary = atob(DOCX_B64);
+    const bytes  = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    const blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = 'CTE_Quality_Reference_Guide.docx';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+</script>
+</body>
+</html>
